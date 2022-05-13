@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request
-import jwt_utils
-
+from Utils import Config ,jwt_utils
+import sqlite3
+from Model import questionModel
+from Service import QuestionService
 app = Flask(__name__)
+
 
 @app.route('/')
 def hello_world():
@@ -20,6 +23,16 @@ def login():
         return jsonify({'token':jwt_utils.build_token()})
     else :
         return '', 401
+@app.route('/questions', methods=['POST'])
+def addQuestion():
+    Authorization = request.headers.get('Authorization')
+
+    body = request.get_json()
+    question =QuestionService.convertJsonToQuestion(body)
+    
+    return '', 201
+
+    
 
 if __name__ == "__main__":
     app.run(ssl_context='adhoc')
