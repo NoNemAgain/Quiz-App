@@ -29,6 +29,8 @@ def addQuestion():
 
     body = request.get_json()
     question =QuestionService.convertJsonToQuestion(body)
+    QuestionService.createQuestion(question)
+
     
     return '', 201
 
