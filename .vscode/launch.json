@@ -12,7 +12,7 @@
           "type": "python",
           "request": "launch",
           "program": "app.py",
-          "console": "integratedTerminal",
+          "console": "bash",
                   "justMyCode": true
         }
       ]
