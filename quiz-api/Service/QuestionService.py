@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+from msilib.schema import Error
 from flask import Flask, jsonify, request
 from flask import Flask, jsonify, request
 from Model import questionModel
@@ -13,14 +15,19 @@ def connectionDB():
 
 
 def createQuestion(input_question):
-    db_connection = connectionDB()
-    cur = db_connection.cursor()
+    try :
+        db_connection = connectionDB()
+        cur = db_connection.cursor()
 
-    cur.execute("begin")
+        cur.execute("begin")
+        insertion_result = cur.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
+        cur.execute("commit")
+        return insertion_result
+    except Error:
+        return NULL
+    
 
-    insertion_result = cur.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
-
-    cur.execute("commit")
+  
 
    
 
@@ -28,8 +35,11 @@ def convertQuestionToJson(question):
     return json.dumps(question.__dict__)
 
 def convertJsonToQuestion(body): 
-    question = questionModel.QuestionModel(int(body["position"]), body["title"], body["text"], body["image"])
-    return question
+    try :
+        question =questionModel.QuestionModel(int(body["position"]), body["title"], body["text"], body["image"])
+        return question
+    except Error:
+        return NULL
 
 
     

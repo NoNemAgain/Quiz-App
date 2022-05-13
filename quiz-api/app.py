@@ -25,14 +25,16 @@ def login():
         return '', 401
 @app.route('/questions', methods=['POST'])
 def addQuestion():
-    Authorization = request.headers.get('Authorization')
-
+    authorization =  request.headers.get('Authorization')
+    if authorization is None :
+         return '', 401
     body = request.get_json()
     question =QuestionService.convertJsonToQuestion(body)
-    QuestionService.createQuestion(question)
-
-    
-    return '', 201
+    resultRequest = QuestionService.createQuestion(question)
+    if resultRequest is None :
+         return '', 400
+    else :
+        return '', 200
 
     
 
