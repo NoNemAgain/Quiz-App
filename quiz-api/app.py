@@ -20,7 +20,7 @@ def GetQuestion(position):
         pos =position
         result =QuestionService.getQuestionByPosition(pos)  
         jsonResult = QuestionService.convertQuestionToJson(result)
-        return jsonResult ,200
+        return jsonResult.encode('utf8').decode("utf_8") ,200
 
 
 @app.route('/login', methods=['POST'])
