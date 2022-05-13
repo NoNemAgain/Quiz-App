@@ -15,6 +15,14 @@ def hello_world():
 def GetQuizInfo():
 	return {"size": 0, "scores": []}, 200
 
+@app.route('/questions/<position>', methods=['GET'])
+def GetQuestion(position):
+        pos =position
+        result =QuestionService.getQuestionByPosition(pos)  
+        jsonResult = QuestionService.convertQuestionToJson(result)
+        return jsonResult ,200
+
+
 @app.route('/login', methods=['POST'])
 def login():
     payload = request.get_json()
