@@ -3,9 +3,11 @@ from msilib.schema import Error
 from flask import Flask, jsonify, request
 from Model import questionModel ,answerModel
 from Utils import Config ,jwt_utils
+from Service import AnswerService
 import json
 import sqlite3
 from collections import namedtuple
+
 
 def connectionDB():
     db_connection = sqlite3.connect(Config.PATH)
@@ -29,7 +31,7 @@ def createQuestion(input_question):
 def getQuestionByPosition(position):
     try :
         questions = []
-        answers = []
+       
         cursor = connectionDB()
         cursor.execute("begin")
         insertion_result = cursor.execute("SELECT * FROM Question where position = ?", (position))
@@ -40,19 +42,8 @@ def getQuestionByPosition(position):
             questions.append(question)
         cursor.execute("commit")
 
-
-        cursor.execute("begin")
-        insertion_result = cursor.execute("SELECT * FROM Answer")
-        rows = cursor.fetchall()
-
-        for elem in rows:
-           answers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3]))
-
-        for question in questions :
-            for answer in answers:
-                if question.position == answer.positionQuestion :
-                    question.possibleAnswers.append(answer)
-        cursor.execute("commit")
+        answers = AnswerService.addAnswerToQuestion(cursor, questions)
+       
         return questions
     except Error:
         return NULL
