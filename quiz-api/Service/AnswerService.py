@@ -28,32 +28,17 @@ def createQuestion(input_question):
 
 def getQuestionByPosition(position):
     try :
-        questions = []
         answers = []
         cursor = connectionDB()
-        cursor.execute("begin")
-        insertion_result = cursor.execute("SELECT * FROM Question where position = ?", (position))
-        rows = cursor.fetchall()
-
-        for element in rows:
-            question = questionModel.QuestionModel(element[0], element[1], element[2], element[3], list()) 
-            questions.append(question)
-        cursor.execute("commit")
-
-
         cursor.execute("begin")
         insertion_result = cursor.execute("SELECT * FROM Answer")
         rows = cursor.fetchall()
 
         for elem in rows:
-           answers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3]))
+           answers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3])) 
 
-        for question in questions :
-            for answer in answers:
-                if question.position == answer.positionQuestion :
-                    question.possibleAnswers.append(answer)
         cursor.execute("commit")
-        return questions
+        return answers
     except Error:
         return NULL
 
