@@ -10,7 +10,20 @@ from collections import namedtuple
 
 
 
+def checkPosQuestionExist(cursor):
+    try :
+        cursor.execute("begin")
+        request_result = cursor.execute("SELECT * FROM Question ORDER BY POSITION DESC LIMIT 1")
+        rows = cursor.fetchall()
+        if len(rows) ==0  :
+            cursor.execute("commit")
+            return NULL
+        question_Result = rows[0]
+        cursor.execute("commit")
+        return question_Result
 
+    except Error:
+        raise Exception('Adding answer query Failed')
 
 def connectionDB():
     db_connection = sqlite3.connect(Config.PATH)
@@ -21,7 +34,9 @@ def connectionDB():
 def createQuestion(input_question):
     try :
         cursor = connectionDB()
-        
+        #Check if position already taken 
+        #Increment other posQuestion + 1 of question
+        #Increment answer posQuestion+1 
         cursor.execute("begin")
         request_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
@@ -74,11 +89,12 @@ def convertJsonToQuestion(body):
 def updateQuestion(oldPositionQuestion,updatedQuestion):
     try :
         cursor = connectionDB()
-      
-        AnswerService.updateAnswerWithPositionQuestion(cursor,oldPositionQuestion,updatedQuestion.possibleAnswers)
+        if checkPosQuestionExist(cursor) == NULL :
+              raise Exception(' Delete query Failed')
         cursor.execute("begin")
         request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldPositionQuestion))
         cursor.execute("commit")
+        AnswerService.updateAnswerWithPositionQuestion(cursor,oldPositionQuestion,updatedQuestion.possibleAnswers)
         return '' ,204
     except Error:
         raise Exception(' Delete query Failed')

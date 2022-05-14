@@ -31,7 +31,7 @@ def GetQuestion(position):
      
 
 
-@app.route('/questions/<position>', methods=['PUT'])
+@app.route('/questions/<oldPositionQuestion>', methods=['PUT'])
 def UpdateQuestion(oldPositionQuestion):
         try:
                 if request.headers.get('Authorization') is None :
