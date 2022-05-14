@@ -94,8 +94,8 @@ def updateQuestion(oldPositionQuestion,updatedQuestion):
         cursor.execute("begin")
         request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldPositionQuestion))
         cursor.execute("commit")
-        AnswerService.updateAnswerWithPositionQuestion(cursor,oldPositionQuestion,updatedQuestion.possibleAnswers)
-        return '' ,204
+        AnswerService.updateAnswerWithPositionQuestion(connectionDB(),oldPositionQuestion,updatedQuestion.possibleAnswers)
+        return '' ,200
     except Error:
         raise Exception(' Delete query Failed')
 

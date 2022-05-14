@@ -65,16 +65,16 @@ def addAnswerToDataBase(cursor, input_question):
 def deleteAnswerWithPositionQuestion(cursor,positionQuestion):
     try:
         cursor.execute("begin")
-        request_result = cursor.execute("DELETE FROM Answer where PositionQuestion = ?", (positionQuestion))
+        cursor.execute("DELETE FROM Answer where positionQuestion = ?", (positionQuestion))
         cursor.execute("commit")
     except Error:
         raise Exception(' Delete Answer query Failed')
     
 
-def updateAnswerWithPositionQuestion(cursor,positionQuestion,possibleAnswers):
-    pass
-    # for possibleAnswer in possibleAnswers :
-    #     cursor.execute("begin")
-    #     request_result = cursor.execute("Update Answer set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldPositionQuestion))
-    #     cursor.execute("commit")
+def updateAnswerWithPositionQuestion(cursor,oldPositionQuestion,possibleAnswers):
+    deleteAnswerWithPositionQuestion(cursor,oldPositionQuestion)
+    for possibleAnswer in possibleAnswers :
+        cursor.execute("begin")
+        cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,possibleAnswer.positionQuestion,possibleAnswer.positionAnswer))
+        cursor.execute("commit")
     
