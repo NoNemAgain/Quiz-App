@@ -21,11 +21,11 @@ def connectionDB():
 def createQuestion(input_question):
     try :
         cursor = connectionDB()
-        AnswerService.addAnswerToDataBase(cursor, input_question)
-
+        
         cursor.execute("begin")
         request_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
+        AnswerService.addAnswerToDataBase(cursor, input_question)
         return '', 200
     except Error:
         return 400

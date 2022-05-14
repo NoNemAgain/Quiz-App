@@ -10,20 +10,20 @@ from collections import namedtuple
 from Service import QuestionService
 
 def lastIdAnswer(cursor):
-    cursor.execute("begin")
-    request_result = cursor.execute("SELECT * FROM Answer ORDER BY ID DESC LIMIT 1")
-    rows = cursor.fetchall()
-    lastId = rows[0][0]
-    cursor.execute("commit")
-    return lastId
+    try :
+        cursor.execute("begin")
+        request_result = cursor.execute("SELECT * FROM Answer ORDER BY ID DESC LIMIT 1")
+        rows = cursor.fetchall()
+        if len(rows) ==0  :
+            cursor.execute("commit")
+            return 0
+        lastId = rows[0][0]
+        cursor.execute("commit")
+        return lastId
 
-# def countAnswers(cursor):
-#     cursor.execute("begin")
-#     request_result = cursor.execute("SELECT COUNT(*) FROM Answer;")
-#     rows = cursor.fetchall()
-#     lastId = rows[0][0]
-#     cursor.execute("commit")
-#     return lastId
+    except Error:
+        raise Exception('Adding answer query Failed')
+
 def addAnswerToQuestion(cursor, questions):
     try :
         answers = []
@@ -55,17 +55,9 @@ def checkIfQuestionHasAlreadyHisAnswer(cursor,positionQuestion):
         pass
 def addAnswerToDataBase(cursor, input_question):
     try:
-        # checkIfQuestionHasAlreadyHisAnswer(cursor,input_question.possibleAnswers[0].positionQuestion)
-
-        id = lastIdAnswer(cursor)
-        
         for answer in input_question.possibleAnswers :
-           
-           
             cursor.execute("begin") 
-            id +=1 
-            cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (id, answer.text, answer.isCorrect,answer.positionQuestion,answer.positionAnswer ))
-
+            cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.positionQuestion,answer.positionAnswer))
             cursor.execute("commit")
     except Error:
         raise Exception(' Insert  Answer query Failed')
