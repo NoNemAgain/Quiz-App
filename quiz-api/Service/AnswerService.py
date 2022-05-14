@@ -22,7 +22,8 @@ def lastIdAnswer(cursor):
         return lastId
 
     except Error:
-        raise Exception('Adding answer query Failed')
+        raise Exception('Get Id Answer query Failed')
+
 
 def addAnswerToQuestion(cursor, questions):
     try :
@@ -35,17 +36,17 @@ def addAnswerToQuestion(cursor, questions):
         cursor.execute("commit")
         for question in questions :
             for answer in answers:
-                if question.position == answer.positionQuestion :
+                if question.position == answer.idQuestion :
                     question.possibleAnswers.append(answer)
         return answers
     except Error:
         raise Exception('Adding answer query Failed')
 
-def checkIfQuestionHasAlreadyHisAnswer(cursor,positionQuestion):
+def checkIfQuestionHasAlreadyHisAnswer(cursor,idQuestion):
     try : 
         cursor.execute("begin") 
                 
-        cursor.execute("SELECT * FROM Answer where PositionQuestion = ?", (positionQuestion))
+        cursor.execute("SELECT * FROM Answer where idQuestion = ?", (idQuestion))
         rows = cursor.fetchall()
         if rows[0][1] == 4 :
             raise Exception('Only 4 answers are allowed ')
@@ -57,24 +58,31 @@ def addAnswerToDataBase(cursor, input_question):
     try:
         for answer in input_question.possibleAnswers :
             cursor.execute("begin") 
-            cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.positionQuestion,answer.positionAnswer))
+            cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.idQuestion,answer.positionAnswer))
             cursor.execute("commit")
     except Error:
         raise Exception(' Insert  Answer query Failed')
 
-def deleteAnswerWithPositionQuestion(cursor,positionQuestion):
+def deleteAnswerWithIdQuestion(cursor,idQuestion):
     try:
         cursor.execute("begin")
-        cursor.execute("DELETE FROM Answer where positionQuestion = ?", (positionQuestion))
+        cursor.execute("DELETE FROM Answer where idQuestion = ?", (idQuestion))
         cursor.execute("commit")
     except Error:
         raise Exception(' Delete Answer query Failed')
     
 
-def updateAnswerWithPositionQuestion(cursor,oldPositionQuestion,possibleAnswers):
-    deleteAnswerWithPositionQuestion(cursor,oldPositionQuestion)
+def updateAnswerWithidQuestion(cursor,oldIdQuestion,possibleAnswers):
+    deleteAnswerWithidQuestion(cursor,oldIdQuestion)
     for possibleAnswer in possibleAnswers :
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,possibleAnswer.positionQuestion,possibleAnswer.positionAnswer))
+        cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,possibleAnswer.idQuestion,possibleAnswer.positionAnswer))
         cursor.execute("commit")
-    
+def incrementAnswerPosSup(cursor,position):
+    try :
+        cursor.execute("begin")
+        cursor.execute("Update Answer SET idQuestion = idQuestion +1 WHERE idQuestion>= ?", (position))
+        cursor.execute("commit")
+        
+    except Error:
+        raise Exception('Adding answer query Failed')

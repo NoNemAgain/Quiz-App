@@ -8,37 +8,65 @@ import json
 import sqlite3
 from collections import namedtuple
 
-
-
-def checkPosQuestionExist(cursor,position):
+def lastIdQuestion(cursor):
     try :
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Question WHERE position = ? ORDER BY POSITION DESC LIMIT 1", (position))
+        request_result = cursor.execute("SELECT * FROM Question ORDER BY ID DESC LIMIT 1")
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
-            return NULL
-        question_Result = rows[0]
+            return 0
+        lastId = rows[0][0]
         cursor.execute("commit")
-        return question_Result
+        return lastId
 
     except Error:
-        raise Exception('Adding answer query Failed')
+        raise Exception('Get Id Question query Failed')
+
+def checkPosQuestionExist(cursor,position):
+
+    cursor.execute("begin")
+    request_result = cursor.execute("SELECT * FROM Question WHERE position = ?", (position))
+    rows = cursor.fetchall()
+    if len(rows) ==0  :
+        cursor.execute("commit")
+        return 0
+    question_Result = rows[0]
+    cursor.execute("commit")
+    return question_Result
+
+   
 
 def connectionDB():
-    db_connection = sqlite3.connect(Config.PATH)
-    db_connection.isolation_level = None
-    cursor = db_connection.cursor()
-    return cursor
+    try :
+        db_connection = sqlite3.connect(Config.PATH)
+        db_connection.isolation_level = None
+        cursor = db_connection.cursor()
+        return cursor
+    except Error:
+        raise Exception('Connection failed')
+def incrementQuestionPosSup(cursor,position):
+    try :
+        cursor.execute("begin")
+        cursor.execute("Update Question SET position = position +1 WHERE position> ?", (position))
+        cursor.execute("commit")
+        
+    except Error:
+        raise Exception('Adding answer query Failed')
 
 def createQuestion(input_question):
     try :
         cursor = connectionDB()
         #Check if position already taken 
-        #Increment other posQuestion + 1 of question
-        #Increment answer posQuestion+1 
+        position = input_question.position
+        checkPos =checkPosQuestionExist(cursor,str(position))
+        if checkPos != 0 :
+            incrementQuestionPosSup(cursor,str(position-1))
+            # AnswerService.incrementAnswerPosSup(cursor,str(position-1))
+        
+        id = lastIdQuestion(cursor) +1
         cursor.execute("begin")
-        request_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
+        request_result = cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ?)", (id,input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
         AnswerService.addAnswerToDataBase(cursor, input_question)
         return '', 200
@@ -54,7 +82,7 @@ def getQuestionByPosition(position):
         rows = cursor.fetchall()
 
         for element in rows:
-            question = questionModel.QuestionModel(element[0], element[1], element[2], element[3], list()) 
+            question = questionModel.QuestionModel(element[0],element[0], element[1], element[2], element[3], list()) 
             questions.append(question)
         cursor.execute("commit")
 
@@ -81,31 +109,32 @@ def convertJsonToQuestion(body):
             id +=1
             answer = answerModel.AnswerModel(id, element["text"],element["isCorrect"],posQuestion,len(answers)+1)
             answers.append(answer) 
-        question =questionModel.QuestionModel(posQuestion, body["title"], body["text"], body["image"], answers)
+        id = lastIdQuestion(connectionDB()) +1
+        question =questionModel.QuestionModel(id,posQuestion, body["title"], body["text"], body["image"], answers)
         return question
     except Error:
         return NULL
 
-def updateQuestion(oldPositionQuestion,updatedQuestion):
+def updateQuestion(oldIdQuestion,updatedQuestion):
     try :
         cursor = connectionDB()
-        if checkPosQuestionExist(cursor,oldPositionQuestion) == NULL :
+        if checkPosQuestionExist(cursor,oldIdQuestion) == 0 :
               raise Exception(' Delete query Failed')
         cursor.execute("begin")
-        request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldPositionQuestion))
+        request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldIdQuestion))
         cursor.execute("commit")
-        AnswerService.updateAnswerWithPositionQuestion(connectionDB(),oldPositionQuestion,updatedQuestion.possibleAnswers)
+        AnswerService.updateAnswerWithIdQuestion(connectionDB(),oldIdQuestion,updatedQuestion.possibleAnswers)
         return '' ,200
     except Error:
         raise Exception(' Delete query Failed')
 
-def deleteQuestion(positionQuestion):
+def deleteQuestion(idQuestion):
     try :
         cursor = connectionDB()
         cursor.execute("begin")
-        request_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (positionQuestion))
+        request_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (idQuestion))
         cursor.execute("commit")
-        AnswerService.deleteAnswerWithPositionQuestion(cursor,positionQuestion)
+        AnswerService.deleteAnswerWithIdQuestion(cursor,idQuestion)
         return '' ,204
     except Error:
         raise Exception(' Delete query Failed')
