@@ -19,9 +19,9 @@ def connectionDB():
 def createQuestion(input_question):
     try :
         cursor = connectionDB()
+        AnswerService.addAnswerToDataBase(cursor, input_question)
+
         cursor.execute("begin")
-        for answer in input_question.possibleAnswers :
-            cursor.execute("INSERT INTO Answer VALUES (?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.positionQuestion ))
         insertion_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
         return insertion_result
@@ -31,7 +31,6 @@ def createQuestion(input_question):
 def getQuestionByPosition(position):
     try :
         questions = []
-       
         cursor = connectionDB()
         cursor.execute("begin")
         insertion_result = cursor.execute("SELECT * FROM Question where position = ?", (position))
@@ -64,5 +63,18 @@ def convertJsonToQuestion(body):
     except Error:
         return NULL
 
+def updateQuestion():
+    pass
+
+def deleteQuestion(positionQuestion):
+    try :
+        cursor = connectionDB()
+        cursor.execute("begin")
+        insertion_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (positionQuestion))
+        cursor.execute("commit")
+        AnswerService.deleteAnswerWithPositionQuestion(cursor,positionQuestion)
+        return '' ,204
+    except Error:
+        return '',400
 
     

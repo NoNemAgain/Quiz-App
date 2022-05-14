@@ -15,12 +15,9 @@ def addAnswerToQuestion(cursor, questions):
         cursor.execute("begin")
         insertion_result = cursor.execute("SELECT * FROM Answer")
         rows = cursor.fetchall()
-
         for elem in rows:
            answers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3]))
         cursor.execute("commit")
-
-        
         for question in questions :
             for answer in answers:
                 if question.position == answer.positionQuestion :
@@ -29,7 +26,17 @@ def addAnswerToQuestion(cursor, questions):
     except Error:
         return NULL
 
+def addAnswerToDataBase(cursor, input_question):
+    cursor.execute("begin")
+    for answer in input_question.possibleAnswers :
+        cursor.execute("INSERT INTO Answer VALUES (?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.positionQuestion ))
+    cursor.execute("commit")
 
+def deleteAnswerWithPositionQuestion(cursor,positionQuestion):
+    cursor.execute("begin")
+    insertion_result = cursor.execute("DELETE FROM Answer where PositionQuestion = ?", (positionQuestion))
+    cursor.execute("commit")
+    
 
 
     

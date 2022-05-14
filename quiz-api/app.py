@@ -17,12 +17,20 @@ def GetQuizInfo():
 
 @app.route('/questions/<position>', methods=['GET'])
 def GetQuestion(position):
-        pos =position
-        result =QuestionService.getQuestionByPosition(pos)  
+        result =QuestionService.getQuestionByPosition(position)  
         jsonResult = QuestionService.convertQuestionToJson(result)
         jsonResultUTF8 = jsonResult.encode('utf8').decode("utf_8")
         return jsonResultUTF8 ,200
 
+
+@app.route('/questions/<position>', methods=['PUT'])
+def UpdateQuestion(position):
+        return '' ,200
+
+@app.route('/questions/<position>', methods=['DELETE'])
+def DeleteQuestion(position):
+        return QuestionService.deleteQuestion(position)
+        
 
 @app.route('/login', methods=['POST'])
 def login():
