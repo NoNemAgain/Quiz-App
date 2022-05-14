@@ -54,11 +54,11 @@ def checkIfQuestionHasAlreadyHisAnswer(cursor,idQuestion):
         cursor.execute("commit")
     except Error:
         pass
-def addAnswerToDataBase(cursor, input_question):
+def addAnswerToDataBase(cursor, input_question,idQuestion):
     try:
         for answer in input_question.possibleAnswers :
             cursor.execute("begin") 
-            cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.idQuestion,answer.positionAnswer))
+            cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,idQuestion,answer.positionAnswer))
             cursor.execute("commit")
     except Error:
         raise Exception(' Insert  Answer query Failed')
@@ -73,11 +73,12 @@ def deleteAnswerWithIdQuestion(cursor,idQuestion):
     
 
 def updateAnswerWithidQuestion(cursor,oldIdQuestion,possibleAnswers):
-    deleteAnswerWithidQuestion(cursor,oldIdQuestion)
+    deleteAnswerWithIdQuestion(cursor,oldIdQuestion)
     for possibleAnswer in possibleAnswers :
         cursor.execute("begin")
         cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,possibleAnswer.idQuestion,possibleAnswer.positionAnswer))
         cursor.execute("commit")
+        
 def incrementAnswerPosSup(cursor,position):
     try :
         cursor.execute("begin")

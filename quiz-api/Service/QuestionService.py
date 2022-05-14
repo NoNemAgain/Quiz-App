@@ -45,10 +45,10 @@ def connectionDB():
         return cursor
     except Error:
         raise Exception('Connection failed')
-def incrementQuestionPosSup(cursor,position):
+def incrementQuestionPosSup(cursor,positionQuestion):
     try :
         cursor.execute("begin")
-        cursor.execute("Update Question SET position = position +1 WHERE position> ?", (position))
+        cursor.execute("Update Question SET position = position +1 WHERE position> ?", (positionQuestion))
         cursor.execute("commit")
         
     except Error:
@@ -64,11 +64,11 @@ def createQuestion(input_question):
             incrementQuestionPosSup(cursor,str(position-1))
             # AnswerService.incrementAnswerPosSup(cursor,str(position-1))
         
-        id = lastIdQuestion(cursor) +1
+        idQuestion = lastIdQuestion(cursor) +1
         cursor.execute("begin")
-        request_result = cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ?)", (id,input_question.position, input_question.title, input_question.text,input_question.image))
+        request_result = cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ?)", (idQuestion,input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
-        AnswerService.addAnswerToDataBase(cursor, input_question)
+        AnswerService.addAnswerToDataBase(cursor, input_question ,idQuestion)
         return '', 200
     except Error:
         return 400
@@ -109,7 +109,7 @@ def convertJsonToQuestion(body):
             id +=1
             answer = answerModel.AnswerModel(id, element["text"],element["isCorrect"],posQuestion,len(answers)+1)
             answers.append(answer) 
-        id = lastIdQuestion(connectionDB()) +1
+        id = lastIdQuestion(connectionDB())+1
         question =questionModel.QuestionModel(id,posQuestion, body["title"], body["text"], body["image"], answers)
         return question
     except Error:
