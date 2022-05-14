@@ -17,6 +17,13 @@ def lastIdAnswer(cursor):
     cursor.execute("commit")
     return lastId
 
+# def countAnswers(cursor):
+#     cursor.execute("begin")
+#     request_result = cursor.execute("SELECT COUNT(*) FROM Answer;")
+#     rows = cursor.fetchall()
+#     lastId = rows[0][0]
+#     cursor.execute("commit")
+#     return lastId
 def addAnswerToQuestion(cursor, questions):
     try :
         answers = []
@@ -34,10 +41,27 @@ def addAnswerToQuestion(cursor, questions):
     except Error:
         raise Exception('Adding answer query Failed')
 
+def checkIfQuestionHasAlreadyHisAnswer(cursor,positionQuestion):
+    try : 
+        cursor.execute("begin") 
+                
+        cursor.execute("SELECT * FROM Answer where PositionQuestion = ?", (positionQuestion))
+        rows = cursor.fetchall()
+        if rows[0][1] == 4 :
+            raise Exception('Only 4 answers are allowed ')
+
+        cursor.execute("commit")
+    except Error:
+        pass
 def addAnswerToDataBase(cursor, input_question):
     try:
+        # checkIfQuestionHasAlreadyHisAnswer(cursor,input_question.possibleAnswers[0].positionQuestion)
+
         id = lastIdAnswer(cursor)
+        
         for answer in input_question.possibleAnswers :
+           
+           
             cursor.execute("begin") 
             id +=1 
             cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (id, answer.text, answer.isCorrect,answer.positionQuestion,answer.positionAnswer ))
