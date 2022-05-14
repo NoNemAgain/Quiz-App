@@ -7,6 +7,9 @@ from Service import QuestionService
 app = Flask(__name__)
 
 
+         
+
+
 @app.route('/')
 def hello_world():
 	x = 'world'
@@ -29,13 +32,21 @@ def GetQuestion(position):
 
 
 @app.route('/questions/<position>', methods=['PUT'])
-def UpdateQuestion(position):
-        return '' ,200
+def UpdateQuestion(oldPositionQuestion):
+        try:
+                if request.headers.get('Authorization') is None :
+                        return '',401
+                updatedQuestion =QuestionService.convertJsonToQuestion(request.get_json())
+                return QuestionService.updateQuestion(oldPositionQuestion,updatedQuestion)
+        except Exception:
+                return '',404
 
 @app.route('/questions/<position>', methods=['DELETE'])
 def DeleteQuestion(position):
         try:
-               return QuestionService.deleteQuestion(position)
+                if request.headers.get('Authorization') is None :
+                        return '',401
+                return QuestionService.deleteQuestion(position)
         except Exception:
                 return '',404
         
@@ -52,14 +63,12 @@ def login():
 @app.route('/questions', methods=['POST'])
 def addQuestion():
         try:
-                authorization =  request.headers.get('Authorization')
-                if authorization is None :
-                        return '', 401
+                if request.headers.get('Authorization') is None :
+                        return '',401
                 question =QuestionService.convertJsonToQuestion(request.get_json())
                 return QuestionService.createQuestion(question)
-    
         except Exception:
-                return '',401
+                return '',400
     
 
 if __name__ == "__main__":

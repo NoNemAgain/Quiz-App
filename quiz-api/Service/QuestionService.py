@@ -9,12 +9,14 @@ import sqlite3
 from collections import namedtuple
 
 
+
+
+
 def connectionDB():
     db_connection = sqlite3.connect(Config.PATH)
     db_connection.isolation_level = None
     cursor = db_connection.cursor()
     return cursor
-
 
 def createQuestion(input_question):
     try :
@@ -22,7 +24,7 @@ def createQuestion(input_question):
         AnswerService.addAnswerToDataBase(cursor, input_question)
 
         cursor.execute("begin")
-        insertion_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
+        request_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
         return '', 200
     except Error:
@@ -33,7 +35,7 @@ def getQuestionByPosition(position):
         questions = []
         cursor = connectionDB()
         cursor.execute("begin")
-        insertion_result = cursor.execute("SELECT * FROM Question where position = ?", (position))
+        request_result = cursor.execute("SELECT * FROM Question where position = ?", (position))
         rows = cursor.fetchall()
 
         for element in rows:
@@ -58,22 +60,34 @@ def convertJsonToQuestion(body):
     try :
         answers = []
         posQuestion = int(body["position"])
+        
+        id = AnswerService.lastIdAnswer(connectionDB())
         for element in body["possibleAnswers"] :
-            answer = answerModel.AnswerModel(len(answers)+1, element["text"],element["isCorrect"],posQuestion)
-            answers.append(answer)
+            id +=1
+            answer = answerModel.AnswerModel(id, element["text"],element["isCorrect"],posQuestion,len(answers)+1)
+            answers.append(answer) 
         question =questionModel.QuestionModel(posQuestion, body["title"], body["text"], body["image"], answers)
         return question
     except Error:
         return NULL
 
-def updateQuestion():
-    pass
+def updateQuestion(oldPositionQuestion,updatedQuestion):
+    try :
+        cursor = connectionDB()
+      
+        AnswerService.updateAnswerWithPositionQuestion(cursor,oldPositionQuestion,updatedQuestion.possibleAnswers)
+        cursor.execute("begin")
+        request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldPositionQuestion))
+        cursor.execute("commit")
+        return '' ,204
+    except Error:
+        raise Exception(' Delete query Failed')
 
 def deleteQuestion(positionQuestion):
     try :
         cursor = connectionDB()
         cursor.execute("begin")
-        insertion_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (positionQuestion))
+        request_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (positionQuestion))
         cursor.execute("commit")
         AnswerService.deleteAnswerWithPositionQuestion(cursor,positionQuestion)
         return '' ,204
