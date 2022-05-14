@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from distutils.log import error
 from msilib.schema import Error
 from flask import Flask, jsonify, request
 from Model import questionModel ,answerModel
@@ -24,18 +25,24 @@ def addAnswerToQuestion(cursor, questions):
                     question.possibleAnswers.append(answer)
         return answers
     except Error:
-        return NULL
+        raise Exception('Adding answer query Failed')
 
 def addAnswerToDataBase(cursor, input_question):
-    cursor.execute("begin")
-    for answer in input_question.possibleAnswers :
-        cursor.execute("INSERT INTO Answer VALUES (?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.positionQuestion ))
-    cursor.execute("commit")
+    try:
+        cursor.execute("begin")
+        for answer in input_question.possibleAnswers :
+            cursor.execute("INSERT INTO Answer VALUES (?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,answer.positionQuestion ))
+        cursor.execute("commit")
+    except Error:
+        raise Exception(' Insert  Answer query Failed')
 
 def deleteAnswerWithPositionQuestion(cursor,positionQuestion):
-    cursor.execute("begin")
-    insertion_result = cursor.execute("DELETE FROM Answer where PositionQuestion = ?", (positionQuestion))
-    cursor.execute("commit")
+    try:
+        cursor.execute("begin")
+        insertion_result = cursor.execute("DELETE FROM Answer where PositionQuestion = ?", (positionQuestion))
+        cursor.execute("commit")
+    except Error:
+        raise Exception(' Delete Answer query Failed')
     
 
 

@@ -24,9 +24,9 @@ def createQuestion(input_question):
         cursor.execute("begin")
         insertion_result = cursor.execute("INSERT INTO Question VALUES (?, ?, ?, ?)", (input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
-        return insertion_result
+        return '', 200
     except Error:
-        return NULL
+        return 400
 
 def getQuestionByPosition(position):
     try :
@@ -45,11 +45,14 @@ def getQuestionByPosition(position):
        
         return questions
     except Error:
-        return NULL
+       raise Exception('Query Failed')
 
 
 def convertQuestionToJson(question): 
-    return question[0].toJSON()
+        try :
+            return question[0].toJSON()
+        except Error:
+            raise Exception(' Convert to Json Failed')
 
 def convertJsonToQuestion(body): 
     try :
@@ -75,6 +78,6 @@ def deleteQuestion(positionQuestion):
         AnswerService.deleteAnswerWithPositionQuestion(cursor,positionQuestion)
         return '' ,204
     except Error:
-        return '',400
+        raise Exception(' Delete query Failed')
 
     

@@ -1,3 +1,4 @@
+from distutils.log import error
 from flask import Flask, jsonify, request
 from Utils import Config ,jwt_utils
 import sqlite3
@@ -17,10 +18,14 @@ def GetQuizInfo():
 
 @app.route('/questions/<position>', methods=['GET'])
 def GetQuestion(position):
-        result =QuestionService.getQuestionByPosition(position)  
-        jsonResult = QuestionService.convertQuestionToJson(result)
-        jsonResultUTF8 = jsonResult.encode('utf8').decode("utf_8")
-        return jsonResultUTF8 ,200
+        try:
+                Result =QuestionService.getQuestionByPosition(position)
+                jsonResult = QuestionService.convertQuestionToJson(Result)
+                return jsonResult.encode('utf8').decode("utf_8") ,200
+        except Exception:
+                return '',404
+                
+     
 
 
 @app.route('/questions/<position>', methods=['PUT'])
@@ -29,7 +34,11 @@ def UpdateQuestion(position):
 
 @app.route('/questions/<position>', methods=['DELETE'])
 def DeleteQuestion(position):
-        return QuestionService.deleteQuestion(position)
+        try:
+               return QuestionService.deleteQuestion(position)
+        except Exception:
+                return '',404
+        
         
 
 @app.route('/login', methods=['POST'])
@@ -42,17 +51,15 @@ def login():
         return '', 401
 @app.route('/questions', methods=['POST'])
 def addQuestion():
-    authorization =  request.headers.get('Authorization')
-    if authorization is None :
-         return '', 401
-    body = request.get_json()
-    question =QuestionService.convertJsonToQuestion(body)
-    resultRequest = QuestionService.createQuestion(question)
-    if resultRequest is None :
-         return '', 400
-    else :
-        return '', 200
-
+        try:
+                authorization =  request.headers.get('Authorization')
+                if authorization is None :
+                        return '', 401
+                question =QuestionService.convertJsonToQuestion(request.get_json())
+                return QuestionService.createQuestion(question)
+    
+        except Exception:
+                return '',401
     
 
 if __name__ == "__main__":
