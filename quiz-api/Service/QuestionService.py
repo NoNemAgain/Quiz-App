@@ -10,10 +10,10 @@ from collections import namedtuple
 
 
 
-def checkPosQuestionExist(cursor):
+def checkPosQuestionExist(cursor,position):
     try :
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Question ORDER BY POSITION DESC LIMIT 1")
+        request_result = cursor.execute("SELECT * FROM Question WHERE position = ? ORDER BY POSITION DESC LIMIT 1", (position))
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
@@ -89,7 +89,7 @@ def convertJsonToQuestion(body):
 def updateQuestion(oldPositionQuestion,updatedQuestion):
     try :
         cursor = connectionDB()
-        if checkPosQuestionExist(cursor) == NULL :
+        if checkPosQuestionExist(cursor,oldPositionQuestion) == NULL :
               raise Exception(' Delete query Failed')
         cursor.execute("begin")
         request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldPositionQuestion))
