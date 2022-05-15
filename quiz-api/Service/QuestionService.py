@@ -35,7 +35,17 @@ def checkPosQuestionExist(cursor,position):
     cursor.execute("commit")
     return question_Result
 
-   
+def checkNumberQuestionAbovePos(cursor,position):
+
+    cursor.execute("begin")
+    request_result = cursor.execute("SELECT * FROM Question WHERE position > ?", (position))
+    rows = cursor.fetchall()
+    if len(rows) ==0  :
+        cursor.execute("commit")
+        return 0
+    nbQuestioAbovPos = len(rows)
+    cursor.execute("commit")
+    return nbQuestioAbovPos
 
 def connectionDB():
     try :
@@ -45,25 +55,25 @@ def connectionDB():
         return cursor
     except Error:
         raise Exception('Connection failed')
-def incrementQuestionPosSup(cursor,positionQuestion):
+
+def incrementValueQuestionPosSup(cursor,positionQuestion,incrementValue):
     try :
         cursor.execute("begin")
-        cursor.execute("Update Question SET position = position +1 WHERE position> ?", (positionQuestion))
+        cursor.execute("Update Question SET position = position + ? WHERE position> ?", (incrementValue,positionQuestion))
         cursor.execute("commit")
         
     except Error:
-        raise Exception('Adding answer query Failed')
+        raise Exception('Adding answer query Failed')   
 
 def createQuestion(input_question):
     try :
         cursor = connectionDB()
         #Check if position already taken 
         position = input_question.position
+
         checkPos =checkPosQuestionExist(cursor,str(position))
         if checkPos != 0 :
-            incrementQuestionPosSup(cursor,str(position-1))
-            # AnswerService.incrementAnswerPosSup(cursor,str(position-1))
-        
+            incrementValueQuestionPosSup(cursor,str(position-1),'1')        
         idQuestion = lastIdQuestion(cursor) +1
         cursor.execute("begin")
         request_result = cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ?)", (idQuestion,input_question.position, input_question.title, input_question.text,input_question.image))
@@ -78,7 +88,7 @@ def getQuestionByPosition(position):
         questions = []
         cursor = connectionDB()
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Question where position = ?", (position))
+        request_result = cursor.execute("SELECT * FROM Question where position = ? ", (position))
         rows = cursor.fetchall()
 
         for element in rows:
@@ -128,13 +138,16 @@ def updateQuestion(oldIdQuestion,updatedQuestion):
     except Error:
         raise Exception(' Delete query Failed')
 
-def deleteQuestion(idQuestion):
+def deleteQuestion(position):
     try :
         cursor = connectionDB()
+        id = str(getQuestionByPosition(position)[0].id)
         cursor.execute("begin")
-        request_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (idQuestion))
+        request_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (position))
         cursor.execute("commit")
-        AnswerService.deleteAnswerWithIdQuestion(cursor,idQuestion)
+        AnswerService.deleteAnswerWithIdQuestion(cursor,id)
+        if checkNumberQuestionAbovePos(cursor,position) >0 :
+            incrementValueQuestionPosSup(cursor,position,'-1')
         return '' ,204
     except Error:
         raise Exception(' Delete query Failed')

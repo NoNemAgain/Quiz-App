@@ -72,7 +72,7 @@ def deleteAnswerWithIdQuestion(cursor,idQuestion):
         raise Exception(' Delete Answer query Failed')
     
 
-def updateAnswerWithidQuestion(cursor,oldIdQuestion,possibleAnswers):
+def updateAnswerWithIdQuestion(cursor,oldIdQuestion,possibleAnswers):
     deleteAnswerWithIdQuestion(cursor,oldIdQuestion)
     for possibleAnswer in possibleAnswers :
         cursor.execute("begin")
