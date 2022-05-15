@@ -12,7 +12,7 @@ from Service import QuestionService
 def lastIdAnswer(cursor):
     try :
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Answer ORDER BY ID DESC LIMIT 1")
+        cursor.execute("SELECT * FROM Answer ORDER BY ID DESC LIMIT 1")
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
@@ -25,27 +25,21 @@ def lastIdAnswer(cursor):
         raise Exception('Get Id Answer query Failed')
 
 
-def addAnswerToQuestionModel(cursor, questions):
+def addAnswerToQuestionModel(cursor, question):
     try :
-        answers = []
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Answer")
+        cursor.execute("SELECT * FROM Answer where idQuestion = ?",str(question.id))
         rows = cursor.fetchall()
         for elem in rows:
-           answers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3],elem[4]))
+           question.possibleAnswers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3],elem[4]))
         cursor.execute("commit")
-        for question in questions :
-            for answer in answers:
-                if question.position == answer.idQuestion :
-                    question.possibleAnswers.append(answer)
-        return answers
+        return question.possibleAnswers
     except Error:
         raise Exception('Adding answer query Failed')
 
 def checkIfQuestionHasAlreadyHisAnswer(cursor,idQuestion):
     try : 
         cursor.execute("begin") 
-                
         cursor.execute("SELECT * FROM Answer where idQuestion = ?", (idQuestion))
         rows = cursor.fetchall()
         if rows[0][1] == 4 :

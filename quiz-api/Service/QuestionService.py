@@ -11,7 +11,7 @@ from collections import namedtuple
 def lastIdQuestion(cursor):
     try :
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Question ORDER BY ID DESC LIMIT 1")
+        cursor.execute("SELECT * FROM Question ORDER BY ID DESC LIMIT 1")
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
@@ -26,7 +26,7 @@ def lastIdQuestion(cursor):
 def checkPosQuestionExist(cursor,position):
 
     cursor.execute("begin")
-    request_result = cursor.execute("SELECT * FROM Question WHERE position = ?", (position))
+    cursor.execute("SELECT * FROM Question WHERE position = ?", (position))
     rows = cursor.fetchall()
     if len(rows) ==0  :
         cursor.execute("commit")
@@ -38,7 +38,7 @@ def checkPosQuestionExist(cursor,position):
 def checkNumberQuestionAbovePos(cursor,position):
 
     cursor.execute("begin")
-    request_result = cursor.execute("SELECT * FROM Question WHERE position > ?", (position))
+    cursor.execute("SELECT * FROM Question WHERE position > ?", (position))
     rows = cursor.fetchall()
     if len(rows) ==0  :
         cursor.execute("commit")
@@ -76,7 +76,7 @@ def createQuestion(input_question):
             incrementValueQuestionPosSup(cursor,str(position-1),'1')        
         idQuestion = lastIdQuestion(cursor) +1
         cursor.execute("begin")
-        request_result = cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ?)", (idQuestion,input_question.position, input_question.title, input_question.text,input_question.image))
+        cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ?)", (idQuestion,input_question.position, input_question.title, input_question.text,input_question.image))
         cursor.execute("commit")
         AnswerService.addAnswerToDataBase(cursor, input_question ,idQuestion)
         return '', 200
@@ -85,27 +85,23 @@ def createQuestion(input_question):
 
 def getQuestionByPosition(position):
     try :
-        questions = []
         cursor = connectionDB()
         cursor.execute("begin")
-        request_result = cursor.execute("SELECT * FROM Question where position = ? ", (position))
+        cursor.execute("SELECT * FROM Question where position = ? ", (position))
         rows = cursor.fetchall()
-
-        for element in rows:
-            question = questionModel.QuestionModel(element[0],element[1], element[2], element[3], element[4], list()) 
-            questions.append(question)
+        firstResult = rows[0]
+        question = questionModel.QuestionModel(firstResult[0],firstResult[1], firstResult[2], firstResult[3], firstResult[4], list()) 
         cursor.execute("commit")
-
-        answers = AnswerService.addAnswerToQuestionModel(cursor, questions)
+        answers = AnswerService.addAnswerToQuestionModel(cursor, question)
        
-        return questions
+        return question
     except Error:
        raise Exception('Query Failed')
 
 
 def convertQuestionToJson(question): 
         try :
-            return question[0].toJSON()
+            return question.toJSON()
         except Error:
             raise Exception(' Convert to Json Failed')
 
@@ -131,7 +127,7 @@ def updateQuestion(oldIdQuestion,updatedQuestion):
         if checkPosQuestionExist(cursor,oldIdQuestion) == 0 :
               raise Exception(' Delete query Failed')
         cursor.execute("begin")
-        request_result = cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldIdQuestion))
+        cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE Position = ?", (updatedQuestion.position,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,oldIdQuestion))
         cursor.execute("commit")
         AnswerService.updateAnswerWithIdQuestion(connectionDB(),oldIdQuestion,updatedQuestion.possibleAnswers)
         return '' ,200
@@ -141,11 +137,11 @@ def updateQuestion(oldIdQuestion,updatedQuestion):
 def deleteQuestion(position):
     try :
         cursor = connectionDB()
-        id = str(getQuestionByPosition(position)[0].id)
+        idQuest = str(getQuestionByPosition(position).id)
         cursor.execute("begin")
-        request_result = cursor.execute("DELETE FROM Question WHERE Position = ?", (position))
+        cursor.execute("DELETE FROM Question WHERE Position = ?", (position))
         cursor.execute("commit")
-        AnswerService.deleteAnswerWithIdQuestion(cursor,id)
+        AnswerService.deleteAnswerWithIdQuestion(cursor,idQuest)
         if checkNumberQuestionAbovePos(cursor,position) >0 :
             incrementValueQuestionPosSup(cursor,position,'-1')
         return '' ,204
