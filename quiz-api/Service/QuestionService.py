@@ -92,11 +92,11 @@ def getQuestionByPosition(position):
         rows = cursor.fetchall()
 
         for element in rows:
-            question = questionModel.QuestionModel(element[0],element[0], element[1], element[2], element[3], list()) 
+            question = questionModel.QuestionModel(element[0],element[1], element[2], element[3], element[4], list()) 
             questions.append(question)
         cursor.execute("commit")
 
-        answers = AnswerService.addAnswerToQuestion(cursor, questions)
+        answers = AnswerService.addAnswerToQuestionModel(cursor, questions)
        
         return questions
     except Error:

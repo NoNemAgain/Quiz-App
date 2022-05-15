@@ -25,7 +25,7 @@ def lastIdAnswer(cursor):
         raise Exception('Get Id Answer query Failed')
 
 
-def addAnswerToQuestion(cursor, questions):
+def addAnswerToQuestionModel(cursor, questions):
     try :
         answers = []
         cursor.execute("begin")
