@@ -1,5 +1,5 @@
 import json
-class Quiz(object):
+class QuizModel(object):
         def __init__(self, id):
                 self.id =id
                 
