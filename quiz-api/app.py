@@ -15,14 +15,7 @@ def hello_world():
 	x = 'world'
 	return f"Hello, {x}"
 
-@app.route('/quiz-info', methods=['GET'])
-def GetQuizInfo():
-        try:
-                quiz =QuizService.getQuiz().toJSON()
-                return quiz.encode('utf8').decode("utf_8") ,200
-        except Exception:
-                return '',404
-	# return {"size": 0, "scores": []}, 200
+
 @app.route('/login', methods=['POST'])
 def login():
     payload = request.get_json()
@@ -90,6 +83,13 @@ def DeleteAllParticipiation():
                 return ParticipationService.deleteAllParticipiation()
         except Exception:
                 return '',404
-        
+@app.route('/quiz-info', methods=['GET'])
+def GetQuizInfo():
+        try:
+                quiz =QuizService.getQuiz().toJSON()
+                return quiz.encode('utf8').decode("utf_8") ,200
+        except Exception:
+                return '',404
+	# return {"size": 0, "scores": []}, 200
 if __name__ == "__main__":
     app.run(ssl_context='adhoc')

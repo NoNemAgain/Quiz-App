@@ -28,7 +28,7 @@ def createParticipation(inputParticipation):
         idQuiz = QuizService.getQuizId(cursor)
         idParticipation= lastIdParticipation(cursor)
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Participation VALUES (? ,?,NULL,?)", (idParticipation,inputParticipation.playerName,idQuiz))
+        cursor.execute("INSERT INTO Participation VALUES (? ,?,? ,?)", (idParticipation,inputParticipation.playerName,idParticipation+100,idQuiz))
         cursor.execute("commit")
         ResponseParticipationService.addResponseParticipationToDataBase(cursor, inputParticipation,idParticipation)
         DAO.closeDB(connexion)
@@ -66,3 +66,16 @@ def deleteAllParticipiation():
         return '' ,204
     except Error:
         raise Exception(' Delete query Failed')
+
+def getAllScore(cursor):
+    try :
+        scores = []
+        cursor.execute("begin") 
+        cursor.execute("SELECT * FROM Participation ")
+        rows = cursor.fetchall()
+        for participation in rows : 
+            scores.append(participation[2])
+        cursor.execute("commit")
+        return scores
+    except Error:
+       raise Exception('Query Failed')
