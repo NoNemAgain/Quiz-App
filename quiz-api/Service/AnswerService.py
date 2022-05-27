@@ -70,7 +70,7 @@ def updateAnswerWithIdQuestion(cursor,oldIdQuestion,possibleAnswers):
     deleteAnswerWithIdQuestion(cursor,oldIdQuestion)
     for possibleAnswer in possibleAnswers :
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,possibleAnswer.idQuestion,possibleAnswer.positionAnswer))
+        cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,oldIdQuestion,possibleAnswer.positionAnswer))
         cursor.execute("commit")
 
 def changeIDQuestionForAnswer(cursor,oldIdQuestion,wantedId):

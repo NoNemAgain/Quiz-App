@@ -133,7 +133,7 @@ def convertJsonToQuestion(body):
         idQuestion = lastIdQuestion(connexion.cursor())
         for element in body["possibleAnswers"] :
             idAnswer +=1
-            answer = answerModel.AnswerModel(idAnswer, element["text"],element["isCorrect"],idQuestion,len(answers)+1)
+            answer = answerModel.AnswerModel(idAnswer, element["text"],element["isCorrect"],NULL,len(answers)+1)
             answers.append(answer) 
         
         question =questionModel.QuestionModel(idQuestion,posQuestion, body["title"], body["text"], body["image"], answers)
@@ -178,19 +178,18 @@ def updateQuestion(oldPosition,updatedQuestion):
         checkPosition = checkIfPositionAlreadyTook(cursor,oldPosition,wantedPosition)
         if checkPosition == False:
             idWantedPosition = str(getQuestionByPositionWithConnexion(cursor,wantedPosition)[0])
-            AnswerService.changeIDQuestionForAnswer(cursor,wantedPosition,10000)
+            AnswerService.changeIDQuestionForAnswer(cursor,idWantedPosition,10000)
             incrementPositionUpdate(cursor ,oldPosition,wantedPosition) 
 
         cursor.execute("begin")
         cursor.execute("Update Question set position = ? , title= ? , text = ? , image = ? WHERE id = ?", (wantedPosition,updatedQuestion.title,updatedQuestion.text,updatedQuestion.image,id))
         cursor.execute("commit")
         if checkPosition == False:
-           
             AnswerService.deleteAnswerWithIdQuestion(cursor,id)
 
         AnswerService.updateAnswerWithIdQuestion(cursor,id,updatedQuestion.possibleAnswers)
-        # if checkPosition == False:
-        #     AnswerService.changeIDQuestionForAnswer(cursor,10000,oldID)
+        if checkPosition == False:
+            AnswerService.changeIDQuestionForAnswer(cursor,10000,idWantedPosition)
         DAO.closeDB(connexion)
         return '' ,200
     except Error:
