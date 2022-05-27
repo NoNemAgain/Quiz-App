@@ -23,29 +23,48 @@ def lastIdQuestion(cursor):
     except Error:
         raise Exception('Get Id Question query Failed')
 
+def countQuestion(cursor,idQuiz):
+    try :
+        cursor.execute("begin")
+        cursor.execute("SELECT COUNT() FROM Question WHERE idQuiz= ?",str(idQuiz))
+        rows = cursor.fetchall()
+        if len(rows) ==0  :
+            cursor.execute("commit")
+            return 0
+        count = rows[0][0]
+        cursor.execute("commit")
+        return count
 
+    except Error:
+        raise Exception('Get Id Question query Failed')
 
 def checkPosQuestionExist(cursor,position):
-    cursor.execute("begin")
-    cursor.execute("SELECT * FROM Question WHERE position = ?", (str(position)))
-    rows = cursor.fetchall()
-    if len(rows) ==0  :
+    try :
+        cursor.execute("begin")
+        cursor.execute("SELECT * FROM Question WHERE position = ?", str(position))
+        rows = cursor.fetchall()
+        if len(rows) ==0  :
+            cursor.execute("commit")
+            return 0
+        question_Result = rows[0]
         cursor.execute("commit")
-        return 0
-    question_Result = rows[0]
-    cursor.execute("commit")
-    return question_Result
+        return question_Result
+    except Error:
+        raise Exception('Adding answer query Failed')
 
 def checkNumberQuestionAbovePos(cursor,position):
-    cursor.execute("begin")
-    cursor.execute("SELECT * FROM Question WHERE position > ?", (str(position)))
-    rows = cursor.fetchall()
-    if len(rows) ==0  :
+    try :
+        cursor.execute("begin")
+        cursor.execute("SELECT * FROM Question WHERE position > ?", (str(position)))
+        rows = cursor.fetchall()
+        if len(rows) ==0  :
+            cursor.execute("commit")
+            return 0
+        nbQuestioAbovPos = len(rows)
         cursor.execute("commit")
-        return 0
-    nbQuestioAbovPos = len(rows)
-    cursor.execute("commit")
-    return nbQuestioAbovPos
+        return nbQuestioAbovPos
+    except Error:
+        raise Exception('Adding answer query Failed')
 
 
 def incrementValueQuestionPosSup(cursor,positionQuestion,incrementValue):

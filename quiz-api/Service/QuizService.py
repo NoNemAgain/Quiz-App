@@ -3,7 +3,7 @@ from msilib.schema import Error
 from flask import Flask, jsonify, request
 from Model import quizModel
 from Utils import Config ,jwt_utils,DAO
-from Service import AnswerService,ParticipationService
+from Service import AnswerService,ParticipationService,QuestionService
 import json
 import sqlite3
 from collections import namedtuple
@@ -38,7 +38,8 @@ def getQuiz():
        
         cursor.execute("commit")
         scores = ParticipationService.getAllScore(cursor)
-        question = quizModel.QuizModel(firstResult[0],scores, len(scores)) 
+        size = QuestionService.countQuestion(cursor,1)
+        question = quizModel.QuizModel(firstResult[0],scores, size) 
 
         DAO.closeDB(connexion)
         return question
