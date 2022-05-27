@@ -72,7 +72,17 @@ def updateAnswerWithIdQuestion(cursor,oldIdQuestion,possibleAnswers):
         cursor.execute("begin")
         cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (possibleAnswer.id,possibleAnswer.text,possibleAnswer.isCorrect,possibleAnswer.idQuestion,possibleAnswer.positionAnswer))
         cursor.execute("commit")
-        
+
+def changeIDQuestionForAnswer(cursor,oldIdQuestion,wantedId):
+    try :
+        cursor.execute("begin")
+        cursor.execute("Update Answer set idQuestion = ? where idQuestion = ?",(str(wantedId),str(oldIdQuestion)))
+        cursor.execute("commit")
+    except Error:
+        raise Exception('Adding answer query Failed')
+
+
+
 def incrementAnswerPosSup(cursor,position):
     try :
         cursor.execute("begin")

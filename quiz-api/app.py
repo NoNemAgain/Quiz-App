@@ -35,13 +35,13 @@ def GetQuestion(position):
                 return '',404
                 
 
-@app.route('/questions/<oldIdQuestion>', methods=['PUT'])
-def UpdateQuestion(oldIdQuestion):
+@app.route('/questions/<position>', methods=['PUT'])
+def UpdateQuestion(position):
         try:
                 if request.headers.get('Authorization') is None :
                         return '',401
                 updatedQuestion =QuestionService.convertJsonToQuestion(request.get_json())
-                return QuestionService.updateQuestion(oldIdQuestion,updatedQuestion)
+                return QuestionService.updateQuestion(position,updatedQuestion)
         except Exception:
                 return '',404
 
