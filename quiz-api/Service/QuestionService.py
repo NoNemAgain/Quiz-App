@@ -93,12 +93,6 @@ def getQuestionByPosition(position):
        raise Exception('Query Failed')
 
 
-def convertQuestionToJson(question): 
-        try :
-            return question.toJSON()
-        except Error:
-            raise Exception(' Convert to Json Failed')
-
 def convertJsonToQuestion(body): 
     try :
         answers = []

@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from Utils import Config ,jwt_utils
 import sqlite3
 from Model import questionModel
-from Service import QuestionService , QuizService
+from Service import QuestionService , QuizService,ParticipationService
 app = Flask(__name__)
 
 
@@ -23,7 +23,16 @@ def GetQuizInfo():
         except Exception:
                 return '',404
 	# return {"size": 0, "scores": []}, 200
+@app.route('/login', methods=['POST'])
+def login():
+    payload = request.get_json()
+    
+    if payload['password'] == "Vive l'ESIEE !" :
+        return jsonify({'token':jwt_utils.build_token()})
+    else :
+        return '', 401
 
+# Question
 @app.route('/questions/<position>', methods=['GET'])
 def GetQuestion(position):
         try:
@@ -32,8 +41,6 @@ def GetQuestion(position):
         except Exception:
                 return '',404
                 
-     
-
 
 @app.route('/questions/<oldIdQuestion>', methods=['PUT'])
 def UpdateQuestion(oldIdQuestion):
@@ -54,16 +61,6 @@ def DeleteQuestion(position):
         except Exception:
                 return '',404
         
-        
-
-@app.route('/login', methods=['POST'])
-def login():
-    payload = request.get_json()
-    
-    if payload['password'] == "Vive l'ESIEE !" :
-        return jsonify({'token':jwt_utils.build_token()})
-    else :
-        return '', 401
 @app.route('/questions', methods=['POST'])
 def addQuestion():
         try:
@@ -73,7 +70,17 @@ def addQuestion():
                 return QuestionService.createQuestion(question)
         except Exception:
                 return '',400
-    
+# Participation
+
+@app.route('/participations', methods=['POST'])
+def addParticipation():
+        try:
+                # if request.headers.get('Authorization') is None :
+                #         return '',401
+                participation =ParticipationService.convertJsonToQuestion(request.get_json())
+                return ParticipationService.createParticipation(participation)
+        except Exception:
+                return '',400
 
 if __name__ == "__main__":
     app.run(ssl_context='adhoc')
