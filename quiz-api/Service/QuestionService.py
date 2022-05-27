@@ -161,8 +161,8 @@ def incrementPositionUpdate(cursor ,oldPosition,wantedPosition):
     
 
     if wantedPosition > oldPosition :
-        minus = int(oldPosition)-1
-        incrementValueQuestionBetween(cursor,str(minus),str(wantedPosition),-1)
+        plus =int(wantedPosition)+1
+        incrementValueQuestionBetween(cursor,str(oldPosition),str(plus),-1)
     elif wantedPosition < oldPosition :
         minus = int(wantedPosition)-1
         incrementValueQuestionBetween(cursor,str(minus),str(oldPosition),1)
