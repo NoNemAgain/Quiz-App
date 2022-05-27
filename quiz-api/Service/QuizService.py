@@ -38,7 +38,7 @@ def getQuiz():
        
         cursor.execute("commit")
         scores = ParticipationService.getAllScore(cursor)
-        size = QuestionService.countQuestion(cursor,1)
+        size = QuestionService.countQuestion(cursor,getQuizId(cursor))
         question = quizModel.QuizModel(firstResult[0],scores, size) 
 
         DAO.closeDB(connexion)

@@ -70,7 +70,7 @@ def addParticipation():
         try:
                 # if request.headers.get('Authorization') is None :
                 #         return '',401
-                participation =ParticipationService.convertJsonToQuestion(request.get_json())
+                participation =ParticipationService.convertJsonToParticipation(request.get_json())
                 return ParticipationService.createParticipation(participation)
         except Exception:
                 return '',400

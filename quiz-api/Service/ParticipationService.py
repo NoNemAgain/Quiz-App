@@ -3,7 +3,7 @@ from msilib.schema import Error
 from flask import Flask, jsonify, request
 from Model import questionModel ,answerModel ,responseParticipationModel,participationModel
 from Utils import Config ,jwt_utils,DAO
-from Service import AnswerService ,ResponseParticipationService, QuizService
+from Service import AnswerService ,ResponseParticipationService, QuizService ,QuestionService
 import json
 import sqlite3
 from collections import namedtuple
@@ -25,18 +25,22 @@ def createParticipation(inputParticipation):
     try :
         connexion = DAO.connexionDB()
         cursor = connexion.cursor()
-        idQuiz = QuizService.getQuizId(cursor)
-        idParticipation= lastIdParticipation(cursor)
+        countQuestion = QuestionService.countQuestion(cursor,QuizService.getQuizId(cursor))
+        if len(inputParticipation.responseParticipation) != countQuestion :
+            raise Exception('Get Id Question query Failed')
+        idQuiz = str(QuizService.getQuizId(cursor))
+        idParticipation= lastIdParticipation(cursor)+1
+        
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Participation VALUES (? ,?,? ,?)", (idParticipation,inputParticipation.playerName,idParticipation+100,idQuiz))
+        cursor.execute("INSERT INTO Participation VALUES (? ,?,? ,?)", (str(idParticipation),inputParticipation.playerName,inputParticipation.score,idQuiz))
         cursor.execute("commit")
-        ResponseParticipationService.addResponseParticipationToDataBase(cursor, inputParticipation,idParticipation)
+        ResponseParticipationService.addResponseParticipationToDataBase(cursor, inputParticipation,str(idParticipation))
         DAO.closeDB(connexion)
-        return '', 200
+        return inputParticipation.toJSON(), 200
     except Error:
         return 400
 
-def convertJsonToQuestion(body): 
+def convertJsonToParticipation(body): 
     try :
         answers =[]
         connexion = DAO.connexionDB()
@@ -48,7 +52,7 @@ def convertJsonToQuestion(body):
             answer = responseParticipationModel.ResponseParticipationModel(id,element,idParticipation)
             answers.append(answer) 
         
-        participation =participationModel.ParticipationModel(id=idParticipation,playerName=body["playerName"],score=NULL,idQuiz=QuizService.getQuizId(cursor),responseParticipation=answers)
+        participation =participationModel.ParticipationModel(id=idParticipation,playerName=body["playerName"],score=str(idParticipation+100),idQuiz=QuizService.getQuizId(cursor),responseParticipation=answers)
         DAO.closeDB(connexion)
         return participation
     except Error:
