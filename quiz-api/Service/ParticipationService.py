@@ -53,3 +53,16 @@ def convertJsonToQuestion(body):
         return participation
     except Error:
         return NULL
+
+def deleteAllParticipiation():
+    try :
+        connexion = DAO.connexionDB()
+        cursor = connexion.cursor()
+        ResponseParticipationService.deleteAllResponseParticipation(cursor)
+        cursor.execute("begin")
+        cursor.execute("DELETE FROM Participation")
+        cursor.execute("commit")
+        DAO.closeDB(connexion)
+        return '' ,204
+    except Error:
+        raise Exception(' Delete query Failed')

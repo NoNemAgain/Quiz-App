@@ -82,5 +82,14 @@ def addParticipation():
         except Exception:
                 return '',400
 
+@app.route('/participations', methods=['DELETE'])
+def DeleteAllParticipiation():
+        try:
+                # if request.headers.get('Authorization') is None :
+                #         return '',401
+                return ParticipationService.deleteAllParticipiation()
+        except Exception:
+                return '',404
+        
 if __name__ == "__main__":
     app.run(ssl_context='adhoc')

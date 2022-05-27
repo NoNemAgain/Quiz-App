@@ -33,3 +33,11 @@ def addResponseParticipationToDataBase(cursor, inputParticipation,idParticipatio
             cursor.execute("commit")
     except Error:
         raise Exception(' Insert  Answer query Failed')
+
+def deleteAllResponseParticipation(cursor):
+    try :
+        cursor.execute("begin")
+        cursor.execute("DELETE FROM ResponseParticipation")
+        cursor.execute("commit")
+    except Error:
+        raise Exception(' Delete query Failed')
