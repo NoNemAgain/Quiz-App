@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from Utils import Config ,jwt_utils
 import sqlite3
 from Model import questionModel
-from Service import QuestionService
+from Service import QuestionService , QuizService
 app = Flask(__name__)
 
 
@@ -17,14 +17,18 @@ def hello_world():
 
 @app.route('/quiz-info', methods=['GET'])
 def GetQuizInfo():
-	return {"size": 0, "scores": []}, 200
+        try:
+                quiz =QuizService.getQuiz().toJSON()
+                return quiz.encode('utf8').decode("utf_8") ,200
+        except Exception:
+                return '',404
+	# return {"size": 0, "scores": []}, 200
 
 @app.route('/questions/<position>', methods=['GET'])
 def GetQuestion(position):
         try:
-                Result =QuestionService.getQuestionByPosition(position)
-                jsonResult = QuestionService.convertQuestionToJson(Result)
-                return jsonResult.encode('utf8').decode("utf_8") ,200
+                question =QuestionService.getQuestionByPosition(position).toJSON()
+                return question.encode('utf8').decode("utf_8") ,200
         except Exception:
                 return '',404
                 
