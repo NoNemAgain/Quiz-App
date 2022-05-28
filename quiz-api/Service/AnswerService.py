@@ -28,19 +28,18 @@ def lastIdAnswer(cursor):
 def addAnswerToQuestionModel(cursor, question):
     try :
         cursor.execute("begin")
-        cursor.execute("SELECT * FROM Answer where idQuestion = ?",str(question.id))
+        cursor.execute("SELECT * FROM Answer where idQuestion = ?",(str(question.id),))
         rows = cursor.fetchall()
         for elem in rows:
            question.possibleAnswers.append(answerModel.AnswerModel(elem[0],elem[1],elem[2],elem[3],elem[4]))
         cursor.execute("commit")
-        return question.possibleAnswers
     except Error:
         raise Exception('Adding answer query Failed')
 
 def checkIfQuestionHasAlreadyHisAnswer(cursor,idQuestion):
     try : 
         cursor.execute("begin") 
-        cursor.execute("SELECT * FROM Answer where idQuestion = ?", (idQuestion))
+        cursor.execute("SELECT * FROM Answer where idQuestion = ?", (idQuestion,))
         rows = cursor.fetchall()
         if rows[0][1] == 4 :
             raise Exception('Only 4 answers are allowed ')
@@ -60,7 +59,7 @@ def addAnswerToDataBase(cursor, input_question,idQuestion):
 def deleteAnswerWithIdQuestion(cursor,idQuestion):
     try:
         cursor.execute("begin")
-        cursor.execute("DELETE FROM Answer where idQuestion = ?", (idQuestion))
+        cursor.execute("DELETE FROM Answer where idQuestion = ?", (idQuestion,))
         cursor.execute("commit")
     except Error:
         raise Exception(' Delete Answer query Failed')

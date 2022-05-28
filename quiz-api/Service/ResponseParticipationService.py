@@ -1,7 +1,7 @@
 from asyncio.windows_events import NULL
 from msilib.schema import Error
 from flask import Flask, jsonify, request
-from Model import questionModel ,answerModel
+from Model import questionModel ,answerModel,responseParticipationModel
 from Utils import Config ,jwt_utils
 from Service import AnswerService
 import json
@@ -41,3 +41,14 @@ def deleteAllResponseParticipation(cursor):
         cursor.execute("commit")
     except Error:
         raise Exception(' Delete query Failed')
+
+def addResponseParticipationToModel(cursor, participation):
+    try :
+        cursor.execute("begin")
+        cursor.execute("SELECT * FROM ResponseParticipation where idParticipation = ?",(str(participation.id),))
+        rows = cursor.fetchall()
+        for rp in rows:
+           participation.responseParticipation.append(responseParticipationModel.ResponseParticipationModel(id=rp[0],numResponse=rp[1],idParticipation=rp[2]))
+        cursor.execute("commit")
+    except Error:
+        raise Exception('Adding answer query Failed')

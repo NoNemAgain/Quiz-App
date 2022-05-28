@@ -62,4 +62,3 @@ def getQuizId(cursor):
 
 
         
-        

@@ -25,20 +25,36 @@ def createParticipation(inputParticipation):
     try :
         connexion = DAO.connexionDB()
         cursor = connexion.cursor()
-        countQuestion = QuestionService.countQuestion(cursor,QuizService.getQuizId(cursor))
-        if len(inputParticipation.responseParticipation) != countQuestion :
-            raise Exception('Get Id Question query Failed')
-        idQuiz = str(QuizService.getQuizId(cursor))
-        idParticipation= lastIdParticipation(cursor)+1
         
+
+       
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Participation VALUES (? ,?,? ,?)", (str(idParticipation),inputParticipation.playerName,inputParticipation.score,idQuiz))
+        cursor.execute("INSERT INTO Participation VALUES (? ,?,? ,?)", (inputParticipation.id,inputParticipation.playerName,inputParticipation.score,inputParticipation.idQuiz))
         cursor.execute("commit")
-        ResponseParticipationService.addResponseParticipationToDataBase(cursor, inputParticipation,str(idParticipation))
+        ResponseParticipationService.addResponseParticipationToDataBase(cursor, inputParticipation,str(inputParticipation.id))
         DAO.closeDB(connexion)
         return inputParticipation.toJSON(), 200
     except Error:
         return 400
+
+
+
+def getParticipationById(id):
+    try :
+        connexion = DAO.connexionDB()
+        cursor = connexion.cursor()
+        cursor.execute("begin")
+        cursor.execute("SELECT * FROM Participation WHERE id = ?", (str(id),))
+        rows = cursor.fetchall()
+        firstResult = rows[0]
+        cursor.execute("commit")
+        participation = participationModel.ParticipationModel(id=firstResult[0],playerName=firstResult[1],score=firstResult[2],idQuiz=firstResult[3],responseParticipation=list())
+        ResponseParticipationService.addResponseParticipationToModel(cursor,participation)
+        DAO.closeDB(connexion)
+        return participation
+    except Error:
+       raise Exception('Query Failed')
+
 
 def convertJsonToParticipation(body): 
     try :
@@ -46,13 +62,23 @@ def convertJsonToParticipation(body):
         connexion = DAO.connexionDB()
         cursor = connexion.cursor()
         id = ResponseParticipationService.lastIdResponseParticipation(cursor)
-        idParticipation = lastIdParticipation(connexion.cursor())+1
-        for element in body["answers"] :
+        idQuiz = str(QuizService.getQuizId(cursor))
+        idParticipation= lastIdParticipation(cursor)+1
+        score = 0 
+        count = 0 
+        countQuestion = QuestionService.countQuestion(cursor,QuizService.getQuizId(cursor))
+        if len(body["answers"]) != countQuestion :
+            raise Exception('Get Id Question query Failed')
+
+        for response in body["answers"] :
+            count +=1
             id +=1
-            answer = responseParticipationModel.ResponseParticipationModel(id,element,idParticipation)
-            answers.append(answer) 
+            answer = responseParticipationModel.ResponseParticipationModel(id,response,idParticipation)
+            answers.append(answer)  
+            if response == QuestionService.getQuestionByPosition(count).numCorrect:
+                score+=1
         
-        participation =participationModel.ParticipationModel(id=idParticipation,playerName=body["playerName"],score=str(idParticipation+100),idQuiz=QuizService.getQuizId(cursor),responseParticipation=answers)
+        participation =participationModel.ParticipationModel(id=idParticipation,playerName=body["playerName"],score=score,idQuiz=idQuiz,responseParticipation=answers)
         DAO.closeDB(connexion)
         return participation
     except Error:
@@ -78,7 +104,7 @@ def getAllScore(cursor):
         cursor.execute("SELECT * FROM Participation ")
         rows = cursor.fetchall()
         for participation in rows : 
-            scores.append(participation[2])
+            scores.append(participation)
         cursor.execute("commit")
         return scores
     except Error:

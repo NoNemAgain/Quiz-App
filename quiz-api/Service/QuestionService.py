@@ -41,7 +41,7 @@ def countQuestion(cursor,idQuiz):
 def checkPosQuestionExist(cursor,position):
     try :
         cursor.execute("begin")
-        cursor.execute("SELECT * FROM Question WHERE position = ?", str(position))
+        cursor.execute("SELECT * FROM Question WHERE position = ?", (str(position),))
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
@@ -55,7 +55,7 @@ def checkPosQuestionExist(cursor,position):
 def checkNumberQuestionAbovePos(cursor,position):
     try :
         cursor.execute("begin")
-        cursor.execute("SELECT * FROM Question WHERE position > ?", (str(position)))
+        cursor.execute("SELECT * FROM Question WHERE position > ?", (str(position),))
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
@@ -88,19 +88,19 @@ def createQuestion(input_question):
     try :
         connexion = DAO.connexionDB()
         cursor = connexion.cursor()
-        #Check if position already taken 
         position = input_question.position
 
         checkPos =checkPosQuestionExist(cursor,str(position))
         if checkPos != 0 :
             incrementValueQuestionPosSup(cursor,str(position-1),'1')        
-        idQuestion = lastIdQuestion(cursor) +1
-        idQuiz = QuizService.getQuizId(cursor)
+
+
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ? ,?)", (idQuestion ,input_question.position, input_question.title, input_question.text,input_question.image,idQuiz ))
+        cursor.execute("INSERT INTO Question VALUES (? ,?, ?, ?, ? ,?,?)", (input_question.id ,input_question.position, input_question.title, input_question.text,input_question.image,input_question.idQuiz ,input_question.numCorrect))
         cursor.execute("commit")
-        AnswerService.addAnswerToDataBase(cursor, input_question ,idQuestion)
+        AnswerService.addAnswerToDataBase(cursor, input_question ,input_question.id)
         DAO.closeDB(connexion)
+        
         return '', 200
     except Error:
         return 400
@@ -108,7 +108,7 @@ def createQuestion(input_question):
 def getQuestionByPositionWithConnexion (cursor,position):
     try :
         cursor.execute("begin")
-        cursor.execute("SELECT * FROM Question WHERE position = ?", (str(position)))
+        cursor.execute("SELECT * FROM Question WHERE position = ?", ((str(position),)))
         rows = cursor.fetchall()
         question = rows[0]
         cursor.execute("commit")
@@ -121,7 +121,7 @@ def getQuestionByPosition(position):
         connexion = DAO.connexionDB()
         cursor = connexion.cursor()
         firstResult= getQuestionByPositionWithConnexion (cursor,position)
-        question = questionModel.QuestionModel(firstResult[0],firstResult[1], firstResult[2], firstResult[3], firstResult[4], list()) 
+        question = questionModel.QuestionModel(firstResult[0],firstResult[1], firstResult[2], firstResult[3], firstResult[4],firstResult[5],list(),firstResult[6]) 
         AnswerService.addAnswerToQuestionModel(cursor, question)
         DAO.closeDB(connexion)
         return question
@@ -131,7 +131,7 @@ def getQuestionByPosition(position):
 def getIdByPosition(cursor,position):
     try :
         cursor.execute("begin")
-        cursor.execute("SELECT * FROM Question WHERE position = ?",position)
+        cursor.execute("SELECT * FROM Question WHERE position = ?",(str(position),))
         rows = cursor.fetchall()
         if len(rows) ==0  :
             cursor.execute("commit")
@@ -146,16 +146,22 @@ def convertJsonToQuestion(body):
         answers = []
         posQuestion = int(body["position"])
         connexion = DAO.connexionDB()
-       
-        idAnswer = AnswerService.lastIdAnswer(connexion.cursor())
-        # idQuestion = lastIdQuestion(connexion.cursor())+1
-        idQuestion = lastIdQuestion(connexion.cursor())
+        cursor = connexion.cursor()
+        numCorrect = 0
+        idAnswer = AnswerService.lastIdAnswer(cursor)
+        idQuiz=QuizService.getQuizId(cursor)
+        idQuestion = lastIdQuestion(cursor) +1
+
+
+
         for element in body["possibleAnswers"] :
             idAnswer +=1
             answer = answerModel.AnswerModel(idAnswer, element["text"],element["isCorrect"],NULL,len(answers)+1)
             answers.append(answer) 
+            if element["isCorrect"] == True :
+               numCorrect= len(answers)
         
-        question =questionModel.QuestionModel(idQuestion,posQuestion, body["title"], body["text"], body["image"], answers)
+        question =questionModel.QuestionModel(idQuestion,posQuestion, body["title"], body["text"], body["image"],idQuiz, answers,numCorrect)
         DAO.closeDB(connexion)
         return question
     except Error:
@@ -163,12 +169,12 @@ def convertJsonToQuestion(body):
 
 def checkIfPositionAlreadyTook(cursor,oldPosition,newPosition):
     cursor.execute("begin")
-    cursor.execute("SELECT * FROM Question WHERE position = ?", (oldPosition))
+    cursor.execute("SELECT * FROM Question WHERE position = ?", (str(oldPosition),))
     rows = cursor.fetchall()
     old_question_Title = rows[0][2]
     cursor.execute("commit")
     cursor.execute("begin")
-    cursor.execute("SELECT * FROM Question WHERE position = ?", (str(newPosition)))
+    cursor.execute("SELECT * FROM Question WHERE position = ?", (str(newPosition),))
     rows = cursor.fetchall()
     new_question_Title = rows[0][2]
     cursor.execute("commit")
@@ -220,7 +226,7 @@ def deleteQuestion(position):
         cursor = connexion.cursor()
         idQuest = str(getQuestionByPosition(position).id)
         cursor.execute("begin")
-        cursor.execute("DELETE FROM Question WHERE Position = ?", (position))
+        cursor.execute("DELETE FROM Question WHERE Position = ?", (str(position),))
         cursor.execute("commit")
         AnswerService.deleteAnswerWithIdQuestion(cursor,idQuest)
         if checkNumberQuestionAbovePos(cursor,position) >0 :
@@ -229,5 +235,3 @@ def deleteQuestion(position):
         return '' ,204
     except Error:
         raise Exception(' Delete query Failed')
-
-    
