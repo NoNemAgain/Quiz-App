@@ -178,8 +178,6 @@ def checkIfPositionAlreadyTook(cursor,oldPosition,newPosition):
         cursor.execute("SELECT * FROM Question WHERE position = ?", (str(oldPosition),))
         rows = cursor.fetchall()
         old_question_Title = rows[0][2]
-        cursor.execute("commit")
-        cursor.execute("begin")
         cursor.execute("SELECT * FROM Question WHERE position = ?", (str(newPosition),))
         rows = cursor.fetchall()
         new_question_Title = rows[0][2]
