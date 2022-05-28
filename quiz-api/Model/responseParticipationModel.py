@@ -1,4 +1,6 @@
 import json
+
+
 class ResponseParticipationModel(object):
         def __init__(self,id,numResponse,idParticipation):
                 self.id =id

@@ -1,12 +1,15 @@
-from asyncio.windows_events import NULL
-from msilib.schema import Error
-from flask import Flask, jsonify, request
-from Model import questionModel ,answerModel,responseParticipationModel
-from Utils import Config ,jwt_utils
-from Service import AnswerService
 import json
 import sqlite3
+from asyncio.windows_events import NULL
 from collections import namedtuple
+from msilib.schema import Error
+
+from flask import Flask, jsonify, request
+from Model import answerModel, questionModel, responseParticipationModel
+from Utils import Config, jwt_utils
+
+from Service import AnswerService
+
 
 def lastIdResponseParticipation(cursor):
     try :
@@ -21,7 +24,7 @@ def lastIdResponseParticipation(cursor):
         return lastId
 
     except Error:
-        raise Exception('Get Id Question query Failed')
+        raise Exception('Get last ID participation query Failed')
 
 
 
@@ -32,7 +35,7 @@ def addResponseParticipationToDataBase(cursor, inputParticipation,idParticipatio
             cursor.execute("INSERT INTO ResponseParticipation VALUES (? ,?, ?)", (responseParticipation.id,responseParticipation.numResponse,responseParticipation.idParticipation))
             cursor.execute("commit")
     except Error:
-        raise Exception(' Insert  Answer query Failed')
+        raise Exception(' Insert  Response Participation To DataBase query Failed')
 
 def deleteAllResponseParticipation(cursor):
     try :
@@ -40,7 +43,7 @@ def deleteAllResponseParticipation(cursor):
         cursor.execute("DELETE FROM ResponseParticipation")
         cursor.execute("commit")
     except Error:
-        raise Exception(' Delete query Failed')
+        raise Exception('delete All Response Participation Failed')
 
 def addResponseParticipationToModel(cursor, participation):
     try :

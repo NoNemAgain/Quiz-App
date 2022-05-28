@@ -1,4 +1,6 @@
 import json
+
+
 class QuestionModel(object):
         def __init__(self,id, position, title, text, image,idQuiz,possibleAnswers,numCorrect):
                 self.id =id

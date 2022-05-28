@@ -67,7 +67,7 @@ def addQuestion():
 
 @app.route('/participations', methods=['POST'])
 def addParticipation():
-        try:
+        try:    
                 # if request.headers.get('Authorization') is None :
                 #         return '',401
                 participation =ParticipationService.convertJsonToParticipation(request.get_json())
@@ -90,6 +90,5 @@ def GetQuizInfo():
                 return quiz.encode('utf8').decode("utf_8") ,200
         except Exception:
                 return '',404
-	# return {"size": 0, "scores": []}, 200
 if __name__ == "__main__":
     app.run(ssl_context='adhoc')

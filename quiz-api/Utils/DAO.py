@@ -1,12 +1,14 @@
-from asyncio.windows_events import NULL
-from msilib.schema import Error
-from flask import Flask, jsonify, request
-from Model import questionModel ,answerModel
-from Utils import Config ,jwt_utils
-from Service import AnswerService
 import json
 import sqlite3
+from asyncio.windows_events import NULL
 from collections import namedtuple
+from msilib.schema import Error
+
+from flask import Flask, jsonify, request
+from Model import answerModel, questionModel
+from Service import AnswerService
+
+from Utils import Config, jwt_utils
 
 
 def connexionDB():

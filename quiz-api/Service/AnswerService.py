@@ -1,20 +1,23 @@
-from asyncio.windows_events import NULL
-from distutils.log import error
-from msilib.schema import Error
-from flask import Flask, jsonify, request
-from Model import questionModel ,answerModel
-from Utils import Config ,jwt_utils
 import json
 import sqlite3
+from asyncio.windows_events import NULL
 from collections import namedtuple
+from distutils.log import error
+from msilib.schema import Error
+
+from flask import Flask, jsonify, request
+from Model import answerModel, questionModel
+from Utils import Config, jwt_utils
+
 from Service import QuestionService
+
 
 def lastIdAnswer(cursor):
     try :
         cursor.execute("begin")
         cursor.execute("SELECT * FROM Answer ORDER BY ID DESC LIMIT 1")
         rows = cursor.fetchall()
-        if len(rows) ==0  :
+        if len(rows) == 0  :
             cursor.execute("commit")
             return 0
         lastId = rows[0][0]
@@ -22,7 +25,7 @@ def lastIdAnswer(cursor):
         return lastId
 
     except Error:
-        raise Exception('Get Id Answer query Failed')
+        raise Exception('Get last Id Answer query Failed')
 
 
 def addAnswerToQuestionModel(cursor, question):
@@ -54,7 +57,7 @@ def addAnswerToDataBase(cursor, input_question,idQuestion):
             cursor.execute("INSERT INTO Answer VALUES (? ,?, ?, ?, ?)", (answer.id, answer.text, answer.isCorrect,idQuestion,answer.positionAnswer))
             cursor.execute("commit")
     except Error:
-        raise Exception(' Insert  Answer query Failed')
+        raise Exception(' Insert Answer query Failed')
 
 def deleteAnswerWithIdQuestion(cursor,idQuestion):
     try:
