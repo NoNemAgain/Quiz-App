@@ -107,6 +107,9 @@ def deleteAllParticipiation():
     except Error:
         raise Exception(' Delete query Failed')
 
+
+def takeScore(participation):
+    return participation.score  
 def getAllScore(cursor):
     try :
         scores = []
@@ -115,9 +118,12 @@ def getAllScore(cursor):
         cursor.execute("SELECT * FROM Participation ")
         rows = cursor.fetchall()
         for participation in rows : 
-            scores.append(participation)
+            participationObject =participationModel.ParticipationModel(id=participation[0],playerName=participation[1],score=participation[2],idQuiz=participation[3],responseParticipation=list())
+            ResponseParticipationService.addResponseParticipationToModel(cursor, participationObject)
+            scores.append(participationObject)
         cursor.execute("commit")
-
+        
+        scores.sort(key=takeScore , reverse= True)
         return scores
     except Error:
        raise Exception('get All scored query Failed')

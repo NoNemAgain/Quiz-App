@@ -47,11 +47,9 @@ def deleteAllResponseParticipation(cursor):
 
 def addResponseParticipationToModel(cursor, participation):
     try :
-        cursor.execute("begin")
         cursor.execute("SELECT * FROM ResponseParticipation where idParticipation = ?",(str(participation.id),))
         rows = cursor.fetchall()
         for rp in rows:
            participation.responseParticipation.append(responseParticipationModel.ResponseParticipationModel(id=rp[0],numResponse=rp[1],idParticipation=rp[2]))
-        cursor.execute("commit")
     except Error:
         raise Exception('Adding answer query Failed')
