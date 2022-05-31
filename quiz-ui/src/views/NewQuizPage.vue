@@ -1,9 +1,16 @@
 <template>
-  <div>
-    <p>Saisissez votre nom :</p>
-    <input type="text" class="form-control" v-model="username">
-    <button class="btn btn-outline-danger" @click="launchNewQuiz">GO !</button>
-  </div>
+  <form>
+    <div>
+      <label for="username" class="form-label">Saisissez votre nom :</label>
+      <input type="text" class="form-control" id="username" v-model="username" required>
+    </div>
+    <div>
+      <button class="btn btn-outline-danger" @click="launchNewQuiz">GO !</button>
+    </div>
+  </form>
+
+    
+
 </template>
 
 <script>
@@ -13,18 +20,19 @@ import participationStorageService from "@/services/ParticipationStorageService"
 export default {
   name: "NewQuizPage",
   data() {
-    const username = participationStorageService.getPlayerName();
     return {
-      username : username
+      username : '',
     };
   },
   async created() {
-
+    this.username = participationStorageService.getPlayerName();
   },
   methods:{
     launchNewQuiz(){
-      participationStorageService.savePlayerName(this.username);
-      this.$router.push('/questions');
+      if(this.username) {
+        participationStorageService.savePlayerName(this.username);
+        this.$router.push('/questions');
+      }
     },
   }
 };

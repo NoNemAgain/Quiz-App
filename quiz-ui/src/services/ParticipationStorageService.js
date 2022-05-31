@@ -3,10 +3,13 @@ export default {
           // todo : implement
     },
     savePlayerName(playerName) {
-          window.localStorage.setItem("playerName", playerName);
+        window.localStorage.setItem("playerName", playerName);
     },
     getPlayerName() {		
-          // todo : implement
+        return window.localStorage.getItem("playerName");
+    },
+    removePlayerName() {
+        window.localStorage.removeItem("playerName");
     },
     saveParticipationScore(participationScore) {
           // todo : implement
