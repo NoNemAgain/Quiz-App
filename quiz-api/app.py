@@ -3,8 +3,10 @@ from flask import Flask, jsonify, request
 from Utils import Config ,jwt_utils
 import sqlite3
 from Model import questionModel
+from flask_cors import CORS
 from Service import QuestionService , QuizService,ParticipationService
 app = Flask(__name__)
+CORS(app)
 
 # -*- coding: utf-8 -*-
          
@@ -91,4 +93,5 @@ def GetQuizInfo():
         except Exception:
                 return '',404
 if __name__ == "__main__":
-    app.run(ssl_context='adhoc')
+    app.run()
+        # app.run(host='0.0.0.0', port=5000)
