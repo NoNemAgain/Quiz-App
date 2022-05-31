@@ -6,7 +6,7 @@ from Model import questionModel
 from Service import QuestionService , QuizService,ParticipationService
 app = Flask(__name__)
 
-
+# -*- coding: utf-8 -*-
          
 
 
@@ -30,7 +30,7 @@ def login():
 def GetQuestion(position):
         try:
                 question =QuestionService.getQuestionByPosition(position).toJSON()
-                return question.encode('utf8').decode("utf_8") ,200
+                return question.encode('utf8') ,200
         except Exception:
                 return '',404
                 
@@ -87,7 +87,7 @@ def DeleteAllParticipiation():
 def GetQuizInfo():
         try:
                 quiz =QuizService.getQuiz().toJSON()
-                return quiz.encode('utf8').decode("utf_8") ,200
+                return quiz.encode('utf8') ,200
         except Exception:
                 return '',404
 if __name__ == "__main__":
