@@ -8,14 +8,10 @@
       <button class="btn btn-outline-danger" @click="launchNewQuiz">GO !</button>
     </div>
   </form>
-
-    
-
 </template>
 
 <script>
 import participationStorageService from "@/services/ParticipationStorageService";
-// import quizApiService from "@/services/quizApiService";
 
 export default {
   name: "NewQuizPage",
@@ -27,7 +23,7 @@ export default {
   async created() {
     this.username = participationStorageService.getPlayerName();
   },
-  methods:{
+  methods: {
     launchNewQuiz(){
       if(this.username) {
         participationStorageService.savePlayerName(this.username);

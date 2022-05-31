@@ -19,7 +19,12 @@ export default {
   },
   async created() {
     let quizInfo = await quizApiService.getQuizInfo();
-    this.registeredScores = quizInfo.scores;
+    if(quizInfo.status === 200) {
+      this.registeredScores = quizInfo.data.scores;
+    } else {
+      // gérer erreur
+    }
+    
   }
 };
 </script>

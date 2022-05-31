@@ -28,10 +28,16 @@ export default {
       });
   },
   async getQuizInfo() {
-    var res = await this.call("get", "quiz-info");
-    return res.data;
+    return await this.call("get", "quiz-info");
   },
-  getQuestion(position) {
-    // not implemented
+  async getQuestion(position) {
+    return await this.call("get", "/questions/" + position);
+  },
+  async addParticipation(username, answer) {
+    const data = {  
+      username,
+      answer
+    };
+    return await this.call("post", "/participations", data);
   }
 };
