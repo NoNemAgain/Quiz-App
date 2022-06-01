@@ -12,6 +12,7 @@ from Utils import DAO, Config, jwt_utils
 from Service import (AnswerService, QuestionService, QuizService,
                      ResponseParticipationService)
 
+import datetime
 
 def lastIdParticipation(cursor):
     try :
@@ -31,9 +32,9 @@ def createParticipation(inputParticipation):
     try :
         connexion = DAO.connexionDB()
         cursor = connexion.cursor()
-       
+
         cursor.execute("begin")
-        cursor.execute("INSERT INTO Participation VALUES (? ,?,? ,?)", (inputParticipation.id,inputParticipation.playerName,inputParticipation.score,inputParticipation.idQuiz))
+        cursor.execute("INSERT INTO Participation VALUES (? ,?,?,?,?)", (inputParticipation.id,inputParticipation.playerName,inputParticipation.score,inputParticipation.idQuiz,inputParticipation.date))
         cursor.execute("commit")
         
         ResponseParticipationService.addResponseParticipationToDataBase(cursor, inputParticipation,str(inputParticipation.id))
@@ -56,7 +57,7 @@ def getParticipationById(id):
         firstResult = rows[0]
         cursor.execute("commit")
 
-        participation = participationModel.ParticipationModel(id=firstResult[0],playerName=firstResult[1],score=firstResult[2],idQuiz=firstResult[3],responseParticipation=list())
+        participation = participationModel.ParticipationModel(id=firstResult[0],playerName=firstResult[1],score=firstResult[2],idQuiz=firstResult[3],responseParticipation=list(),date=firstResult[4])
         ResponseParticipationService.addResponseParticipationToModel(cursor,participation)
 
         DAO.closeDB(connexion)
@@ -86,7 +87,7 @@ def convertJsonToParticipation(body):
             if response == QuestionService.getQuestionByPosition(count).numCorrect:
                 score+=1
         
-        participation =participationModel.ParticipationModel(id=idParticipation,playerName=body["playerName"],score=score,idQuiz=idQuiz,responseParticipation=answers)
+        participation =participationModel.ParticipationModel(id=idParticipation,playerName=body["playerName"],score=score,idQuiz=idQuiz,responseParticipation=answers,date=datetime.datetime.now())
         DAO.closeDB(connexion)
         return participation
     except Error:
@@ -118,7 +119,7 @@ def getAllScore(cursor):
         cursor.execute("SELECT * FROM Participation ")
         rows = cursor.fetchall()
         for participation in rows : 
-            participationObject =participationModel.ParticipationModel(id=participation[0],playerName=participation[1],score=participation[2],idQuiz=participation[3],responseParticipation=list())
+            participationObject =participationModel.ParticipationModel(id=participation[0],playerName=participation[1],score=participation[2],idQuiz=participation[3],responseParticipation=list(),date=participation[4])
             ResponseParticipationService.addResponseParticipationToModel(cursor, participationObject)
             scores.append(participationObject)
         cursor.execute("commit")
