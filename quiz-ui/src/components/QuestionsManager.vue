@@ -33,7 +33,9 @@ export default {
   },
   methods: {
     async loadQuestionByPosition() {
-      const newQuestion = await quizApiService.getQuestion(this.currentQuestionPosition);
+      const res = await quizApiService.getQuestion(this.currentQuestionPosition);
+
+      const newQuestion = res.data
 
       this.currentQuestion = {
         title: newQuestion.title,
@@ -44,18 +46,19 @@ export default {
     },
     async answerClickedHandler(index) {
       this.userAnswers.push(index)
-      this.currentQuestionPosition++;
-
-      if(this.currentQuestionPosition > this.totalNumberOfQuestion) {
+      
+      if(this.currentQuestionPosition === this.totalNumberOfQuestion) {
         await this.endQuiz();
       } else {
+        this.currentQuestionPosition++;
         await this.loadQuestionByPosition();
       }
     },
     async endQuiz() {
       const username = participationStorageService.getPlayerName();
-
-      await quizApiService.addParticipation(username, this.userAnswers);
+      const res = await quizApiService.addParticipation(username, this.userAnswers);
+      participationStorageService.saveParticipationScore(res.data.score);
+      this.$router.push('/score');
     }
   }
   

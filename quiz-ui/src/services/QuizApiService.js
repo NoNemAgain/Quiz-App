@@ -33,10 +33,10 @@ export default {
   async getQuestion(position) {
     return await this.call("get", "/questions/" + position);
   },
-  async addParticipation(username, answer) {
+  async addParticipation(playerName, answers) {
     const data = {  
-      username,
-      answer
+      playerName,
+      answers
     };
     return await this.call("post", "/participations", data);
   }

@@ -1,13 +1,11 @@
 <template>
-  <form>
+  <div class="d-flex align-items-center justify-content-center">
+    <div class="welcome-text">Saisissez votre nom</div>
     <div>
-      <label for="username" class="form-label">Saisissez votre nom :</label>
-      <input type="text" class="form-control" id="username" v-model="username" required>
+      <input type="text" class="form-control username-input" id="username" v-model="username" required>
+      <button class="btn btn-primary username-btn" @click="launchNewQuiz">GO !</button>
     </div>
-    <div>
-      <button class="btn btn-outline-danger" @click="launchNewQuiz">GO !</button>
-    </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -33,3 +31,17 @@ export default {
   }
 };
 </script>
+
+<style>
+
+.username-input {
+  max-width: 300px;
+}
+
+.username-btn {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 200px;
+}
+
+</style>
