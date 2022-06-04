@@ -3,8 +3,10 @@
     <div class="new-quiz-container">
       <h3>Saisissez votre nom</h3>
       <div class="input-box">
-        <input type="text" class="form-control username-input" id="username" v-model="username" required>
-        <button class="btn btn-primary username-btn" @click="launchNewQuiz">GO !</button>
+        <form>
+          <input type="text" class="form-control username-input" id="username" v-model="username" required>
+          <button class="btn btn-primary username-btn" @click="launchNewQuiz">GO !</button>
+        </form>
       </div>
     </div>
   </div>
