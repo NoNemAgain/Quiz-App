@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
-    <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
+    <QuestionDisplay 
+      :question="currentQuestion" 
+      :currentQuestionPosition="currentQuestionPosition" 
+      :totalNumberOfQuestion="totalNumberOfQuestion"
+      @answer-selected="answerClickedHandler"/>
   </div>
 </template>
 
@@ -9,12 +12,13 @@
 import quizApiService from "@/services/quizApiService";
 import QuestionDisplay from "@/components/QuestionDisplay.vue";
 import participationStorageService from "@/services/ParticipationStorageService";
+import generalStorageService from "@/services/GeneralStorageService";
 
 export default {
   name: "QuestionsManager",
   data() {
     return {
-      totalNumberOfQuestion: 10,
+      totalNumberOfQuestion: null,
       currentQuestionPosition: 1,
       currentQuestion: {
         title: '',
@@ -27,6 +31,7 @@ export default {
   },
   async created() {
     await this.loadQuestionByPosition()
+    this.totalNumberOfQuestion = Number(generalStorageService.getNumberOfQuestion());
   },
   components: {
     QuestionDisplay
