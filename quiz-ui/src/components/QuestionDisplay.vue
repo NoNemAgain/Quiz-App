@@ -1,16 +1,17 @@
 <template>
-  <div class="question-display">
-    <div class="question-display-head">
-      <h3 class="question-title">Question : {{ currentQuestionPosition }}/{{ totalNumberOfQuestion }} - {{ question.title }}</h3>
-      <div v-if="totalNumberOfQuestion" class="question-num"></div>
-    </div>
-    <img class="question-display-image" v-if="question.image" :src="question.image"/>
-    <div class="question-display-body">
-      <p>{{ question.text }}</p>
-      <div v-if="question" class="container-fluid">
-        <div class="row row-cols-2">
-          <div class="col-12 col-sm-12 col-md-6" v-for="(answer, index) in question.possibleAnswers" :key="answer.text" >
-            <button  class="btn btn-outline-primary  answer-btn" @click="$emit('answer-selected', index+1)">{{ answer.text }}</button>
+  <div class="page">
+    <div class="question-display">
+      <div class="question-display-head">
+        <h6 class="question-title">Question : {{ currentQuestionPosition }}/{{ totalNumberOfQuestion }} - {{ question.title }}</h6>
+      </div>
+      <img class="question-display-image" v-if="question.image" :src="question.image"/>
+      <div class="question-display-body">
+        <div class="question-text">{{ question.text }}</div>
+        <div v-if="question" class="container-fluid">
+          <div class="row row-cols-2">
+            <div class="col-12 col-sm-12 col-md-6" v-for="(answer, index) in question.possibleAnswers" :key="answer.text" >
+              <button  class="btn btn-outline-primary answer-btn" @click="$emit('answer-selected', index+1)">{{ answer.text }}</button>
+            </div>
           </div>
         </div>
       </div>
@@ -68,15 +69,17 @@ export default {
 }
 
 .question-display {
+  height: 100%;
   display: flex;
-  flex-flow: wrap;
+  flex-flow: column;
   justify-content: space-between;
   align-items: center;
   align-content: stretch;
+  text-align: center;
+  padding: 20px 0px;
 }
 
 .question-display-head {
-  margin-top: 20px;
   width: 100%;
 }
 
@@ -84,15 +87,38 @@ export default {
   display: inline-block;
 }
 
-.question-num {
-  display: inline-block;
-  float: right;
-  margin-right: 20px;
-}
-
 .question-display-body {
   width: 100%;
-  align-self: flex-end;
 }
+
+.question-display-image {
+    max-width: 90%;
+    max-height: calc(100% - 240px);
+  }
+
+.question-text {
+  font-size: 30px;
+}
+
+@media (max-width: 576px) {
+  .question-display-image {
+    max-height: 270px;
+  }
+
+  .question-title {
+    font-size: 14px;
+  }
+
+  .answer-btn {
+    height: 50px;
+    font-size: 12px;
+  }
+
+  .question-text {
+    font-size: 16px;
+  }
+}
+
+
 
 </style>

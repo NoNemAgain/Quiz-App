@@ -1,9 +1,11 @@
 <template>
-  <div class="d-flex align-items-center justify-content-center">
-    <div class="welcome-text">Saisissez votre nom</div>
-    <div>
-      <input type="text" class="form-control username-input" id="username" v-model="username" required>
-      <button class="btn btn-primary username-btn" @click="launchNewQuiz">GO !</button>
+  <div class="page">
+    <div class="new-quiz-container">
+      <h3>Saisissez votre nom</h3>
+      <div class="input-box">
+        <input type="text" class="form-control username-input" id="username" v-model="username" required>
+        <button class="btn btn-primary username-btn" @click="launchNewQuiz">GO !</button>
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +44,19 @@ export default {
   margin-top: 10px;
   width: 100%;
   max-width: 200px;
+}
+
+.new-quiz-container {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-box {
+  margin-top: 30px;
+ text-align: center;
 }
 
 </style>

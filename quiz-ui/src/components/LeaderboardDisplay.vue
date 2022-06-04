@@ -1,8 +1,8 @@
 <template>
   <div class="leaderboard">
-    <div v-for="scoreEntry in registeredScores" :key="scoreEntry.playerName" class="card leaderboard-card">
+    <div v-for="(scoreEntry, index) in registeredScores" :key="scoreEntry.playerName" class="card leaderboard-card">
       <div class="card-body leaderboard-card-body">
-        <img src="@/assets/user.png" class="leaderboard-user-img">
+        <div class="leaderboard-num">{{ index + 1 }}</div>
         <div class="leaderboard-user-name">{{ scoreEntry.playerName }}</div>
         <div class="leaderboard-user-score">{{ scoreEntry.score }}</div>
       </div>
@@ -14,9 +14,6 @@
 export default {
   name: "LeaderboardDisplay",
   props: {
-    title: {
-      type: String
-    },
     registeredScores : {
       type: Object
     }
@@ -28,6 +25,8 @@ export default {
 .leaderboard {
   padding: 20px;
   text-align: center;
+  height: calc(100% - 40px);
+  overflow: auto;
 }
 
 .leaderboard .title {
@@ -41,12 +40,10 @@ export default {
 
 .leaderboard-card-body {
   padding: 3px;
-  padding-right: 10px;
+  padding: 3px 10px;
 }
 
-.leaderboard-user-img {
-  height: 30px;
-  width: 30px;
+.leaderboard-num {
   display: inline;
   float: left;
 }

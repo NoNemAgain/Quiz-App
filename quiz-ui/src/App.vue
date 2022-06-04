@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="wrapper">
       <nav class="navbar bg-light quiz-app-navbar">
         <RouterLink class="navbar-brand" to="/">
-          <img src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24"/>
+          <img src="@/assets/full_logo.png" alt="App_logo" height="24"/>
         </RouterLink>
         <div>
           <RouterLink class="nav-link navbar-link navbar-link-home" to="/">Home</RouterLink>
@@ -23,6 +23,11 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <style>
 @import '@/assets/base.css';
+
+.navbar-brand {
+  padding: 0;
+  padding-left: 10px;
+}
 
 .navbar-link {
   display: inline;

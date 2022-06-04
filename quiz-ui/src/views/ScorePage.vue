@@ -1,33 +1,54 @@
 <template>
-  <div>
-    <p>Score</p>
-    <div>
-      <p>Votre score</p>
-      <div>
-        {{ newScore }}
+  <div class="page">
+    <div class="socre-page">
+      <div class="container-fluid  score-container">
+        <div class="row home-page-row">
+          <div class="col-sm-12 col-md-6 player-score">
+            <div class="new-score">
+              <h3>Votre score</h3>
+              <p class="score-value">{{ newScore }}</p>
+            </div>
+            <div>
+              <h3>Vos score précédant</h3>
+              <OldScoresDisplay :playerRegisteredScores="registeredScores.filter(rScore => rScore.playerName === username)" />
+              <!-- Leaderboard of player -->
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6 general-leaderboard-box">
+            <h3>Classement général</h3>
+            <LeaderboardDisplay :registeredScores="registeredScores" />
+          </div>
+          <div>
+            <button class="btn btn-primary score-leaderboard-btn" @click="showLeaderboardModal">Voir classement</button>
+            <button class="btn btn-primary" @click="this.$router.push('/')">Retour au menu</button>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" ref="classementModal" aria-hidden="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Classement</h5>
+            <button type="button" class="btn-close" @click="hideLeaderboardModal"></button>
+          </div> 
+          <div class="modal-body">
+            <LeaderboardDisplay :registeredScores="registeredScores" />
+          </div>
+        </div>
       </div>
     </div>
-
-    <div>
-      <p>Classement de l'utilisateur</p>
-      <div v-for="scoreEntry in registeredScores.filter(rScore => rScore.playerName === username)" :key="scoreEntry.playerName">
-        {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-      </div>
-    </div>
-
-    <div>
-      <p>Classement global</p>
-      <div v-for="scoreEntry in registeredScores" :key="scoreEntry.playerName">
-        {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-      </div>
-    </div>
-    <button class="btn btn-outline-danger" @click="this.$router.push('/')">RETOUR AU MENU</button>
   </div>
 </template>
 
 <script>
 import quizApiService from "@/services/quizApiService";
 import participationStorageService from "@/services/ParticipationStorageService";
+import LeaderboardDisplay from "@/components/LeaderboardDisplay.vue";
+import OldScoresDisplay from "@/components/OldScoresDisplay.vue";
 
 export default {
   name: "ScorePage",
@@ -47,7 +68,62 @@ export default {
     } else {
       // gérer erreur
     }
-    
+  },
+  components: {
+    LeaderboardDisplay,
+    OldScoresDisplay
+  },
+  methods: {
+    showLeaderboardModal(){
+      const modalElement = this.$refs.classementModal;
+      modalElement.style.display = "block";
+    },
+    hideLeaderboardModal(){
+      const modalElement = this.$refs.classementModal;
+      modalElement.style.display = "none";
+    },
   }
 };
 </script>
+
+<style>
+
+.socre-page {
+  height: 100%;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.score-container {
+  height: calc(100% - 90px);
+}
+
+.general-leaderboard-box {
+  height: 100%;
+}
+
+.score-leaderboard-btn {
+  display: none;
+}
+
+.general-leaderboard-box {
+  padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+
+  .score-leaderboard-btn {
+    display: inline-block;
+  }
+
+  .general-leaderboard-box {
+    display: none;
+  }
+
+}
+
+.score-value {
+  font-size: 30px;
+}
+
+</style>
