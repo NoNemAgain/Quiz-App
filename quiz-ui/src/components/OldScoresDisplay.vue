@@ -33,7 +33,10 @@ export default {
     },
     getScoreDate(date) {
       const scoreDate = new Date(date);
-      return scoreDate.getDate() + "/" + scoreDate.getMonth() + "/" + scoreDate.getFullYear();
+      const dd = scoreDate.getDate();
+      const mm = scoreDate.getMonth() + 1;
+      const yyyy = scoreDate.getFullYear();
+      return dd + "/" + mm + "/" + yyyy;
     }
   }
 };

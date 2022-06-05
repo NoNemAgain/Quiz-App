@@ -1,39 +1,6 @@
 <template>
   <div class="page">
-    <div class="container-fluid home-page-container">
-      <div class="row home-page-row">
-        <div class="col-sm-12 col-md-7 col-lg-8 welcome-box">
-          <img class="welcome-img" src="@/assets/full_logo.png" alt="App_logo"/>
-          <div class="welcome-text">
-            <h2>Bienvenue</h2>
-            <h5>Testez vos connaissances avec ce quiz</h5>
-          </div>
-          <div class="welcome-btn">
-            <button btn class="btn btn-primary" @click="this.$router.push('/start-new-quiz-page')">Commencer</button>
-            <button btn class="btn btn-primary leaderboard-btn" @click="showLeaderboardModal">Voir classement</button>
-          </div>   
-        </div>
-        <div class="col-sm-12 col-md-5 col-lg-4 leaderboard-box">
-          <h3>Classement</h3>
-          <LeaderboardDisplay :registeredScores="registeredScores" />
-        </div>
-      </div>
-    </div>
     
-    <!-- Modal -->
-    <div class="modal" ref="classementModal" aria-hidden="false" tabindex="-1">
-      <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Classement</h5>
-            <button type="button" class="btn-close" @click="hideLeaderboardModal"></button>
-          </div> 
-          <div class="modal-body">
-            <LeaderboardDisplay :registeredScores="registeredScores" />
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

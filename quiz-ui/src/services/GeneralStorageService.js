@@ -7,5 +7,11 @@ export default {
     },
     getNumberOfQuestion() {
         return window.sessionStorage.getItem("numberOfQuestion");
+    },
+    saveToken(token) {
+        window.sessionStorage.setItem("token", token);
+    },
+    getToken() {
+        return window.sessionStorage.getItem("token");
     }
   };

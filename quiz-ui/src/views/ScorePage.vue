@@ -9,7 +9,7 @@
               <p class="score-value">{{ newScore }}</p>
             </div>
             <div>
-              <h3>Vos score précédant</h3>
+              <h3>Vos scores précédents</h3>
               <OldScoresDisplay :playerRegisteredScores="registeredScores.filter(rScore => rScore.playerName === username)" />
               <!-- Leaderboard of player -->
             </div>

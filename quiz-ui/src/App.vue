@@ -10,7 +10,7 @@ import { RouterLink, RouterView } from 'vue-router'
           <img src="@/assets/full_logo.png" alt="App_logo" height="24"/>
         </RouterLink>
         <div>
-          <RouterLink class="nav-link navbar-link navbar-link-home" to="/">Home</RouterLink>
+          <RouterLink class="nav-link navbar-link navbar-link-home" to="/">Accueil</RouterLink>
           <span class="vl"></span>
           <RouterLink class="nav-link navbar-link" to="/admin">Administrateur</RouterLink>
         </div>

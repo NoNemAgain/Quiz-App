@@ -19,8 +19,8 @@
   --vt-c-text-dark-1: #FFFFFF;
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
-  --primary-color: #FF4235;
-  --primary-color-hover: #A9332A;
+  --primary-color: #357cff;
+  --primary-color-hover: #2a4ea9;
 
   --header-height: 70px;
 
@@ -68,6 +68,28 @@
   margin: 0;
   position: relative;
   font-weight: normal;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: rgb(228, 218, 218); 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888484; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(87, 87, 87); 
 }
 
 body {

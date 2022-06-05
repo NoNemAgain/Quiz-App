@@ -4,7 +4,7 @@
       <div class="card-body leaderboard-card-body">
         <div class="leaderboard-num">{{ index + 1 }}</div>
         <div class="leaderboard-user-name">{{ scoreEntry.playerName }}</div>
-        <div class="leaderboard-user-score">{{ scoreEntry.score }}</div>
+        <div class="leaderboard-user-score">Score : {{ scoreEntry.score }}</div>
       </div>
     </div>
   </div>

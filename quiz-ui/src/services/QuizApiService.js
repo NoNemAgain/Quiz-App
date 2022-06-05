@@ -24,20 +24,30 @@ export default {
         return { status: response.status, data: response.data };
       })
       .catch((error) => {
-        console.error(error);
+        return {status: error.response.status, data: error.response.data };
       });
   },
+
   async getQuizInfo() {
     return await this.call("get", "quiz-info");
   },
+
   async getQuestion(position) {
     return await this.call("get", "/questions/" + position);
   },
+
   async addParticipation(playerName, answers) {
     const data = {  
       playerName,
       answers
     };
     return await this.call("post", "/participations", data);
+  },
+
+  async login(password) {
+    const data = {
+      password
+    };
+    return await this.call("post", "/login", data);
   }
 };
