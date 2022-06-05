@@ -9,9 +9,9 @@ export default {
         return window.sessionStorage.getItem("numberOfQuestion");
     },
     saveToken(token) {
-        window.sessionStorage.setItem("token", token);
+        window.localStorage.setItem("token", token);
     },
     getToken() {
-        return window.sessionStorage.getItem("token");
+        return window.localStorage.getItem("token");
     }
   };

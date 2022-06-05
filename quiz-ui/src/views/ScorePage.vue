@@ -10,7 +10,7 @@
             </div>
             <div>
               <h3>Vos scores précédents</h3>
-              <OldScoresDisplay :playerRegisteredScores="registeredScores.filter(rScore => rScore.playerName === username)" />
+              <OldScoresDisplay class="score-table" :playerRegisteredScores="registeredScores.filter(rScore => rScore.playerName === username)" />
               <!-- Leaderboard of player -->
             </div>
           </div>
@@ -24,7 +24,6 @@
           </div>
         </div>
       </div>
-      
     </div>
     
     <!-- Modal -->
@@ -123,7 +122,12 @@ export default {
 }
 
 .score-value {
-  font-size: 30px;
+  font-size: 50px;
+  font-weight: 500;
+}
+
+.score-table {
+  margin-top: 20px;
 }
 
 </style>

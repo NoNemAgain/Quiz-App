@@ -49,5 +49,9 @@ export default {
       password
     };
     return await this.call("post", "/login", data);
+  },
+
+  async deleteQuestion(position, token) {
+    return await this.call("delete", "/questions/" + position, null, token);
   }
 };

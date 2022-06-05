@@ -59,6 +59,26 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
   }
+
+  .oldscores-table {
+    background-color: #222222;
+  }
+
+  .table {
+    color: rgba(235, 235, 235, 0.64);
+  }
+
+  .modal-content {
+    border: none;
+  }
+
+  .modal-header {
+    background-color: var(--vt-c-black-mute);
+  }
+
+  .modal-body {
+    background-color: var(--vt-c-black-mute);
+  }
 } */
 
 *,
