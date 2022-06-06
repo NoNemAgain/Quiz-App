@@ -4,6 +4,7 @@ import NewQuizPage from '../views/NewQuizPage.vue'
 import QuestionPage from '../views/QuestionPage.vue'
 import ScorePage from '../views/ScorePage.vue'
 import Admin from '../views/Admin.vue'
+import QuestionAdminDisplay from '../views/QuestionAdminDisplay.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/adminQuestion/:position',
+      name: 'QuestionAdminDisplay',
+      component: QuestionAdminDisplay
     }
   ]
 })

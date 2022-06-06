@@ -14,8 +14,8 @@
           <td>{{ question.title }}</td>
           <td>
             <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-primary">Voir</button>
-              <button type="button" class="btn btn-outline-primary">Modifier</button>
+              <button type="button" class="btn btn-outline-primary" @click="displayQestion(question.position)">Voir</button>
+              <button type="button" class="btn btn-outline-primary" @click="modifierQestion(question.position)">Modifier</button>
               <button type="button" class="btn btn-outline-primary" @click="deleteQuestion(question.position)">Supprimer</button>
             </div>
           </td>
@@ -234,12 +234,16 @@ export default {
   },
   async created() {
     this.token = generalStorageService.getToken();
-    
+    // ToDo : get questions
+    generalStorageService.saveNumberOfQuestion(this.questions.length)
   },
   components: {
 
   },
   methods: {
+    displayQestion(index) {
+      this.$router.push(`/adminQuestion/${index}`)
+    },
     deleteQuestion(position) {
       quizApiService.deleteQuestion(position, this.token);
     }
