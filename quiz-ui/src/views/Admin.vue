@@ -7,7 +7,7 @@
             <h5 class="card-title">Connexion administrateur</h5>
           </div>
           <div class="login-box-body">
-            <label for="password">Psassword</label>
+            <label for="password">Mot de passe</label>
             <input type="password" class="form-control password-input" id="password" v-model="password" required>
             <p v-if="showWrongPwdMsg">Mauvais mot de passe</p>
           </div>
