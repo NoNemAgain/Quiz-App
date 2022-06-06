@@ -1,5 +1,8 @@
 <template>
   <div class="page">
+
+    <AlertPopup v-show="errorMsg" :errorMsg="errorMsg" />
+
     <div class="container-fluid home-page-container">
       <div class="row home-page-row">
         <div class="col-sm-12 col-md-7 col-lg-8 welcome-box">
@@ -10,7 +13,9 @@
           </div>
           <div class="welcome-btn">
             <button btn class="btn btn-primary" @click="this.$router.push('/start-new-quiz-page')">Commencer</button>
-            <button btn class="btn btn-primary leaderboard-btn" @click="showLeaderboardModal">Voir classement</button>
+            <button type="button" class="btn btn-primary leaderboard-btn" data-toggle="modal" data-target="#leaderboardModal">
+              Voir classement
+            </button>
           </div>   
         </div>
         <div class="col-sm-12 col-md-5 col-lg-4 leaderboard-box">
@@ -19,27 +24,17 @@
         </div>
       </div>
     </div>
-    
-    <!-- Modal -->
-    <div class="modal" ref="classementModal" aria-hidden="false" tabindex="-1">
-      <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Classement</h5>
-            <button type="button" class="btn-close" @click="hideLeaderboardModal"></button>
-          </div> 
-          <div class="modal-body">
-            <LeaderboardDisplay :registeredScores="registeredScores" />
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <LeaderboardModal :registeredScores="registeredScores" />
+
   </div>
 </template>
 
 <script>
 import quizApiService from "@/services/quizApiService";
 import LeaderboardDisplay from "@/components/LeaderboardDisplay.vue";
+import AlertPopup from "@/components/AlertPopup.vue";
+import LeaderboardModal from "@/components/LeaderboardModal.vue";
 import generalStorageService from "@/services/GeneralStorageService";
 
 export default {
@@ -47,6 +42,7 @@ export default {
   data() {
     return {
       registeredScores: [],
+      errorMsg: ''
     };
   },
   async created() {
@@ -55,22 +51,14 @@ export default {
       this.registeredScores = quizInfo.data.scores;
       generalStorageService.saveNumberOfQuestion(quizInfo.data.size);
     } else {
-      // gérer erreur
+      this.errorMsg = "Une erreur est survenue lors de la communication avec le serveur";
     }
     
   },
   components: {
-    LeaderboardDisplay
-  },
-  methods: {
-    showLeaderboardModal(){
-      const modalElement = this.$refs.classementModal;
-      modalElement.style.display = "block";
-    },
-    hideLeaderboardModal(){
-      const modalElement = this.$refs.classementModal;
-      modalElement.style.display = "none";
-    },
+    LeaderboardDisplay,
+    AlertPopup,
+    LeaderboardModal
   }
 };
 </script>
@@ -133,7 +121,5 @@ export default {
   height: 100%;
   display: flex;
 }
-
-
 
 </style>

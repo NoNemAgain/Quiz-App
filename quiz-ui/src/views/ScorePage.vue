@@ -19,27 +19,16 @@
             <LeaderboardDisplay :registeredScores="registeredScores" />
           </div>
           <div>
-            <button class="btn btn-primary score-leaderboard-btn" @click="showLeaderboardModal">Voir classement</button>
+            <button type="button" class="btn btn-primary leaderboard-btn" data-toggle="modal" data-target="#leaderboardModal">
+              Voir classement
+            </button>
             <button class="btn btn-primary" @click="this.$router.push('/')">Retour au menu</button>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Modal -->
-    <div class="modal" ref="classementModal" aria-hidden="false" tabindex="-1">
-      <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Classement</h5>
-            <button type="button" class="btn-close" @click="hideLeaderboardModal"></button>
-          </div> 
-          <div class="modal-body">
-            <LeaderboardDisplay :registeredScores="registeredScores" />
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <LeaderboardModal :registeredScores="registeredScores" />
   </div>
 </template>
 
@@ -47,6 +36,7 @@
 import quizApiService from "@/services/quizApiService";
 import participationStorageService from "@/services/ParticipationStorageService";
 import LeaderboardDisplay from "@/components/LeaderboardDisplay.vue";
+import LeaderboardModal from "@/components/LeaderboardModal.vue";
 import OldScoresDisplay from "@/components/OldScoresDisplay.vue";
 
 export default {
@@ -70,17 +60,8 @@ export default {
   },
   components: {
     LeaderboardDisplay,
-    OldScoresDisplay
-  },
-  methods: {
-    showLeaderboardModal(){
-      const modalElement = this.$refs.classementModal;
-      modalElement.style.display = "block";
-    },
-    hideLeaderboardModal(){
-      const modalElement = this.$refs.classementModal;
-      modalElement.style.display = "none";
-    },
+    OldScoresDisplay,
+    LeaderboardModal
   }
 };
 </script>

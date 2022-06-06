@@ -36,6 +36,10 @@ export default {
     return await this.call("get", "/questions/" + position);
   },
 
+  async getQuestions() {
+    return await this.call("get", "/questions");
+  },
+
   async addParticipation(playerName, answers) {
     const data = {  
       playerName,

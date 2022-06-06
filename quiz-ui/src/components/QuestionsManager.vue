@@ -1,5 +1,6 @@
 <template>
   <div>
+    <AlertPopup v-show="errorMsg" :errorMsg="errorMsg" />
     <QuestionDisplay 
       :question="currentQuestion" 
       :currentQuestionPosition="currentQuestionPosition" 
@@ -11,6 +12,7 @@
 <script>
 import quizApiService from "@/services/quizApiService";
 import QuestionDisplay from "@/components/QuestionDisplay.vue";
+import AlertPopup from "@/components/AlertPopup.vue";
 import participationStorageService from "@/services/ParticipationStorageService";
 import generalStorageService from "@/services/GeneralStorageService";
 
@@ -26,7 +28,8 @@ export default {
         text: '',
         possibleAnswers: []
       },
-      userAnswers: []
+      userAnswers: [],
+      errorMsg: ''
     };
   },
   async created() {
@@ -34,19 +37,24 @@ export default {
     this.totalNumberOfQuestion = Number(generalStorageService.getNumberOfQuestion());
   },
   components: {
-    QuestionDisplay
+    QuestionDisplay,
+    AlertPopup
   },
   methods: {
     async loadQuestionByPosition() {
       const res = await quizApiService.getQuestion(this.currentQuestionPosition);
 
-      const newQuestion = res.data
+      if(res.status === 200) {
+        const newQuestion = res.data
 
-      this.currentQuestion = {
-        title: newQuestion.title,
-        image : newQuestion.image,
-        text : newQuestion.text,
-        possibleAnswers : newQuestion.possibleAnswers
+        this.currentQuestion = {
+          title: newQuestion.title,
+          image : newQuestion.image,
+          text : newQuestion.text,
+          possibleAnswers : newQuestion.possibleAnswers
+        }
+      } else {
+        this.errorMsg = "Une erreur est survenue lors de la communication avec le serveur";
       }
     },
     async answerClickedHandler(index) {
