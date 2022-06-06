@@ -2,18 +2,18 @@
   <div class="page">
     <div class="card question-edition-card">
       <h2>Question édition</h2>
-      <form>
+      <form action="#" onsubmit="return false">
         <div class="form-group">
           <label for="questionPosition">Position</label>
-          <input type="number" class="form-control" id="questionPosition" name="position" min="1" :max="totalNumberOfQuestion + 1" placeholder="Position" :value="question.position" required>
+          <input type="number" class="form-control" id="questionPosition" min="1" :max="totalNumberOfQuestion + 1" placeholder="Position" v-model="question.position" required>
         </div>
         <div class="form-group">
           <label for="questionTitle">Titre</label>
-          <input type="text" class="form-control" id="questionTitle" name="title" placeholder="Titre" :value="question.title" required>
+          <input type="text" class="form-control" id="questionTitle" placeholder="Titre" v-model="question.title" required>
         </div>
         <div class="form-group">
           <label for="questionText">Text</label>
-          <input type="text" class="form-control" id="questionText" name="text" placeholder="Text" :value="question.text" required>
+          <input type="text" class="form-control" id="questionText" placeholder="Text" v-model="question.text" required>
         </div>
         <div class="form-group">
           <label for="questionText">Image</label>
@@ -29,15 +29,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="possibleAnswer in question.possibleAnswers" :key="possibleAnswer.text">
-                <td><input class="form-check-input" type="radio" name="questionIsCorrect" :checked="possibleAnswer.isCorrect" required></td>
-                <td><input type="text" class="form-control" placeholder="Text" :value="possibleAnswer.text" required></td>
+              <tr v-for="(possibleAnswer, index) in question.possibleAnswers" :key="index">
+                <td><input class="form-check-input" type="radio" name="questionIsCorrect" :value="index" v-model="checkedIndex" required></td>
+                <td><input type="text" class="form-control" placeholder="Text" v-model="possibleAnswer.text" required></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <button class="btn btn-primary btn-secondary-custom" @click="this.$router.push('/admin')" disableValidation="true">Annuler</button>
-        <button class="btn btn-secondary btn-primary-custom">Sauvegarder</button>
+        <button class="btn btn-secondary btn-custom" @click="this.$router.push('/admin')" disableValidation="true">Annuler</button>
+        <button class="btn btn-primary btn-custom" @click="saveQuestion">Sauvegarder</button>
       </form>
     </div>
   </div>
@@ -59,14 +59,15 @@ export default {
         image: '',
         text: '',
         possibleAnswers: [
-          { text: '', isCorrect: true },
+          { text: '', isCorrect: false },
           { text: '', isCorrect: false },
           { text: '', isCorrect: false },
           { text: '', isCorrect: false }
         ]
       },
       token: '',
-      totalNumberOfQuestion: 1
+      totalNumberOfQuestion: 1,
+      checkedIndex: null
     };
   },
   components: {
@@ -94,11 +95,31 @@ export default {
           text : newQuestion.text,
           possibleAnswers : newQuestion.possibleAnswers
         }
+
+        // Set the index of answer to check
+        this.checkedIndex = newQuestion.numCorrect-1;
       }
       
     },
     imageFileChangedHandler(b64String) {
       this.question.image = b64String;
+    },
+    saveQuestion() {
+      // Check if an answer is set as good answer
+      if(this.checkedIndex) {
+
+        // Set the correct answer to true and others to false
+        for(let i = 0; i < 4; i++) {
+          this.question.possibleAnswers[i].isCorrect = i === this.checkedIndex;
+        }
+
+        // Check if update a question or add a new question
+        if(this.position) {
+          quizApiService.updateQuestion(this.question, this.token);
+        } else {
+          quizApiService.addQuestion(this.question, this.token);
+        }
+      }
     }
   }
 };

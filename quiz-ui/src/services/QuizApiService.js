@@ -57,5 +57,13 @@ export default {
 
   async deleteQuestion(position, token) {
     return await this.call("delete", "/questions/" + position, null, token);
+  },
+
+  async addQuestion(question, token) {
+    return await this.call("post", "/questions", question, token);
+  },
+
+  async updateQuestion(question, token) {
+    return await this.call("put", "/questions/" + question.position, question, token);
   }
 };

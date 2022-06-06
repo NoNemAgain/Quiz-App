@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button class="btn btn-primary btn-primary-custom" @click="modifierQestion()">Modifier</button>
-    <button class="btn btn-primary btn-primary-custom" @click="deleteQuestion()">Supprimer</button>
+    <button class="btn btn-primary btn-custom" @click="modifierQestion()">Modifier</button>
+    <button class="btn btn-primary btn-custom" @click="deleteQuestion()">Supprimer</button>
     <QuestionDisplay 
       :question="currentQuestion" 
       :currentQuestionPosition="position" 

@@ -132,32 +132,13 @@ body {
   min-height: 100vh;
 }
 
-.btn-primary-custom {
-  background-color: var(--primary-color) !important;
+.btn-custom {
   border: none;
   min-width: 200px;
   height: 50px;
   border-radius: 25px;
   font-weight: 500;
   margin: 5px 10px 5px 10px;
-}
-
-.btn-secondary-custom {
-  background-color: var(--secondary-color) !important;
-  border: none;
-  min-width: 200px;
-  height: 50px;
-  border-radius: 25px;
-  font-weight: 500;
-  margin: 5px 10px 5px 10px;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-color-hover) !important;
-}
-
-.btn-secondary:hover {
-  background-color: var(--secondary-color-hover) !important;
 }
 
 .navbar {

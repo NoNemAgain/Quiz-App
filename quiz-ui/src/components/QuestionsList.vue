@@ -23,7 +23,7 @@
         </tr>
       </tbody>
     </table>
-    <button class="btn btn-primary btn-primary-custom" @click="this.$router.push('/questionEdition')">Crée une nouvelle question</button>
+    <button class="btn btn-primary btn-custom" @click="this.$router.push('/questionEdition')">Crée une nouvelle question</button>
   </div>
 </template>
 

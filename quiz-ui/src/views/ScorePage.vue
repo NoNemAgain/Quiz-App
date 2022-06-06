@@ -19,10 +19,10 @@
             <LeaderboardDisplay :registeredScores="registeredScores" />
           </div>
           <div>
-            <button type="button" class="btn btn-primary btn-primary-custom leaderboard-btn" data-toggle="modal" data-target="#leaderboardModal">
+            <button type="button" class="btn btn-primary btn-custom leaderboard-btn" data-toggle="modal" data-target="#leaderboardModal">
               Voir classement
             </button>
-            <button class="btn btn-primary btn-primary-custom" @click="this.$router.push('/')">Retour au menu</button>
+            <button class="btn btn-primary btn-custom" @click="this.$router.push('/')">Retour au menu</button>
           </div>
         </div>
       </div>

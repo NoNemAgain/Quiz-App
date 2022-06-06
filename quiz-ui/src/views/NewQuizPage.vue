@@ -5,7 +5,7 @@
       <div class="input-box">
         <form>
           <input type="text" class="form-control form-control-custom username-input" id="username" v-model="username" required>
-          <button class="btn btn-primary btn-primary-custom username-btn" @click="launchNewQuiz">GO !</button>
+          <button class="btn btn-primary btn-custom username-btn" @click="launchNewQuiz">GO !</button>
         </form>
       </div>
     </div>
