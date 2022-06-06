@@ -1,7 +1,8 @@
 <template>
   <div class="page">
     <div class="card question-edition-card">
-      <h2>Question édition</h2>
+      <h2 v-if="position">Mettre à jour une question</h2>
+      <h2 v-else>Créer une question</h2>
       <form action="#" onsubmit="return false">
         <div class="form-group">
           <label for="questionPosition">Position</label>
@@ -12,8 +13,8 @@
           <input type="text" class="form-control" id="questionTitle" placeholder="Titre" v-model="question.title" required>
         </div>
         <div class="form-group">
-          <label for="questionText">Text</label>
-          <input type="text" class="form-control" id="questionText" placeholder="Text" v-model="question.text" required>
+          <label for="questionText">Texte</label>
+          <input type="text" class="form-control" id="questionText" placeholder="Texte" v-model="question.text" required>
         </div>
         <div class="form-group">
           <label for="questionText">Image</label>
@@ -105,20 +106,16 @@ export default {
       this.question.image = b64String;
     },
     saveQuestion() {
-      // Check if an answer is set as good answer
-      if(this.checkedIndex) {
+      // Set the correct answer to true and others to false
+      for(let i = 0; i < 4; i++) {
+        this.question.possibleAnswers[i].isCorrect = i === this.checkedIndex;
+      }
 
-        // Set the correct answer to true and others to false
-        for(let i = 0; i < 4; i++) {
-          this.question.possibleAnswers[i].isCorrect = i === this.checkedIndex;
-        }
-
-        // Check if update a question or add a new question
-        if(this.position) {
-          quizApiService.updateQuestion(this.question, this.token);
-        } else {
-          quizApiService.addQuestion(this.question, this.token);
-        }
+      // Check if update a question or add a new question
+      if(this.position) {
+        quizApiService.updateQuestion(this.position,this.question, this.token);
+      } else {
+        quizApiService.addQuestion(this.question, this.token);
       }
     }
   }

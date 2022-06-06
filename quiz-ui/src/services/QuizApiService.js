@@ -63,7 +63,7 @@ export default {
     return await this.call("post", "/questions", question, token);
   },
 
-  async updateQuestion(question, token) {
-    return await this.call("put", "/questions/" + question.position, question, token);
+  async updateQuestion(position, question, token) {
+    return await this.call("put", "/questions/" + position, question, token);
   }
 };
