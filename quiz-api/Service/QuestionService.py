@@ -5,7 +5,7 @@ from collections import namedtuple
 from msilib.schema import Error
 
 from flask import Flask, jsonify, request
-from Model import answerModel, questionModel
+from Model import answerModel, questionModel ,questionsListModel
 from Utils import DAO, Config, jwt_utils
 
 from Service import AnswerService, QuizService
@@ -132,6 +132,24 @@ def getQuestionByPosition(position):
     except Error:
        raise Exception('Get question by position query Failed')
 
+def getAllQuestions():
+    try :
+        connexion = DAO.connexionDB()
+        cursor = connexion.cursor()
+        questionList = questionsListModel.QuestionsListModel(list())
+        cursor.execute("begin")
+        cursor.execute("SELECT * FROM Question ORDER BY position ASC")
+        questions = cursor.fetchall()
+        cursor.execute("commit")
+        for question in questions :
+            questionObj= questionModel.QuestionModel(question[0],question[1], question[2], question[3], question[4],question[5],list(),question[6]) 
+            AnswerService.addAnswerToQuestionModel(cursor, questionObj)
+            questionList.questions.append(questionObj)
+        
+        DAO.closeDB(connexion)
+        return questionList
+    except Error:
+       raise Exception('Get question by position query Failed')
 def getIdByPosition(cursor,position):
     try :
         cursor.execute("begin")

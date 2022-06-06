@@ -35,7 +35,14 @@ def GetQuestion(position):
                 return question.encode('utf8') ,200
         except Exception:
                 return '',404
-                
+
+@app.route('/questions', methods=['GET'])
+def GetAllQuestion():
+        try:
+                question = QuestionService.getAllQuestions().toJSON()
+                return question.encode('utf8') ,200
+        except Exception:
+                return '',404       
 
 @app.route('/questions/<position>', methods=['PUT'])
 def UpdateQuestion(position):
