@@ -92,6 +92,9 @@ def DeleteAllParticipiation():
                 return ParticipationService.deleteAllParticipiation()
         except Exception:
                 return '',404
+
+
+# Quiz
 @app.route('/quiz-info', methods=['GET'])
 def GetQuizInfo():
         try:
