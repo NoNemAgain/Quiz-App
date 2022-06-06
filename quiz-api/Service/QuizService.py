@@ -49,6 +49,31 @@ def getQuiz():
     except Error:
         raise Exception('Get Quiz Failed')
 
+
+def getQuizById(id ):
+    try :
+        connexion = DAO.connexionDB()
+        cursor = connexion.cursor()
+
+        cursor.execute("begin")
+        cursor.execute("SELECT * FROM Quiz WHERE id = ? LIMIT 1",(id,))
+        
+        rows = cursor.fetchall()
+        if len(rows) ==0  :
+            cursor.execute("commit")
+            return 0
+        firstResult = rows[0]
+       
+        cursor.execute("commit")
+        scores = ParticipationService.getAllScore(cursor)
+        size = QuestionService.countQuestion(cursor,getQuizId(cursor))
+        question = quizModel.QuizModel(firstResult[0],scores, size) 
+
+        DAO.closeDB(connexion)
+        return question
+    except Error:
+        raise Exception('Get Quiz Failed')
+        
 def getQuizId(cursor):
     try :
         cursor.execute("begin")
@@ -63,6 +88,7 @@ def getQuizId(cursor):
         return idQuiz
     except Error:
         raise Exception('Get Quiz ID Failed')
+
 
 
         
