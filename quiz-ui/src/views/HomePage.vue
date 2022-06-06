@@ -12,8 +12,8 @@
             <h5>Testez vos connaissances avec ce quiz</h5>
           </div>
           <div class="welcome-btn">
-            <button btn class="btn btn-primary" @click="this.$router.push('/start-new-quiz-page')">Commencer</button>
-            <button type="button" class="btn btn-primary leaderboard-btn" data-toggle="modal" data-target="#leaderboardModal">
+            <button btn class="btn btn-primary btn-primary-custom" @click="this.$router.push('/start-new-quiz-page')">Commencer</button>
+            <button type="button" class="btn btn-primary btn-primary-custom leaderboard-btn" data-toggle="modal" data-target="#leaderboardModal">
               Voir classement
             </button>
           </div>   
@@ -113,7 +113,6 @@ export default {
 }
 
 .home-page-container {
-  padding: 20px 20px;
   height: 100%;
 }
 

@@ -8,11 +8,11 @@
           </div>
           <div class="login-box-body">
             <label for="password">Mot de passe</label>
-            <input type="password" class="form-control password-input" id="password" v-model="password" required>
+            <input type="password" class="form-control form-control-custom password-input" id="password" v-model="password" required>
             <p v-if="showWrongPwdMsg">Mauvais mot de passe</p>
           </div>
           <div class="login-box-footer">
-            <button class="btn btn-primary" @click="launchLogin">Connexion</button>
+            <button class="btn btn-primary btn-primary-custom" @click="launchLogin">Connexion</button>
           </div>
         </div>
       </div>

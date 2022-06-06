@@ -43,9 +43,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import '@/assets/base.css';
 
+.page {
+  padding: 0;
+}
 
 .answer-btn {
   background-color: var(--color-background-soft) !important;

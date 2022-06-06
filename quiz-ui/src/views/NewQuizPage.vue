@@ -4,8 +4,8 @@
       <h3>Saisissez votre nom</h3>
       <div class="input-box">
         <form>
-          <input type="text" class="form-control username-input" id="username" v-model="username" required>
-          <button class="btn btn-primary username-btn" @click="launchNewQuiz">GO !</button>
+          <input type="text" class="form-control form-control-custom username-input" id="username" v-model="username" required>
+          <button class="btn btn-primary btn-primary-custom username-btn" @click="launchNewQuiz">GO !</button>
         </form>
       </div>
     </div>

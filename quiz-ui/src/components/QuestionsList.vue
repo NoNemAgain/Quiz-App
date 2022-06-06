@@ -23,6 +23,7 @@
         </tr>
       </tbody>
     </table>
+    <button class="btn btn-primary btn-primary-custom" @click="this.$router.push('/questionEdition')">Crée une nouvelle question</button>
   </div>
 </template>
 
@@ -42,14 +43,14 @@ export default {
   async created() {
     this.token = generalStorageService.getToken();
 
+    // get list of questions
     const res = await quizApiService.getQuestions();
-
     if(res.status === 200) {
       this.questions = res.data.questions;
     } else {
       this.errorMsg = "Une erreur est survenue lors de la communication avec le serveur";
     }
-
+    // add save the number of questions
     generalStorageService.saveNumberOfQuestion(this.questions.length)
   },
   components: {
@@ -57,7 +58,10 @@ export default {
   },
   methods: {
     displayQestion(index) {
-      this.$router.push(`/adminQuestion/${index}`)
+      this.$router.push(`/adminQuestion/${index}`);
+    },
+    async modifierQestion(index) {
+      this.$router.push(`/questionEdition/${index}`);
     },
     async deleteQuestion(position) {
       await quizApiService.deleteQuestion(position, this.token);

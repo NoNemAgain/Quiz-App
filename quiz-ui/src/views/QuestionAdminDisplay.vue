@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="modifierQestion()">Modifier</button>
-    <button class="btn btn-primary" @click="deleteQuestion()">Supprimer</button>
+    <button class="btn btn-primary btn-primary-custom" @click="modifierQestion()">Modifier</button>
+    <button class="btn btn-primary btn-primary-custom" @click="deleteQuestion()">Supprimer</button>
     <QuestionDisplay 
       :question="currentQuestion" 
       :currentQuestionPosition="position" 
@@ -50,11 +50,14 @@ export default {
         possibleAnswers : newQuestion.possibleAnswers
       }
     },
+    modifierQestion() {
+      this.$router.push(`/questionEdition/${ this.position }`)
+    },
     deleteQuestion() {
       quizApiService.deleteQuestion(this.position, this.token);
       this.$router.push('/admin')
     },
-    async answerClickedHandler(index) {
+    async answerClickedHandler() {
 
     }
   }

@@ -21,6 +21,8 @@
 
   --primary-color: #357cff;
   --primary-color-hover: #2a4ea9;
+  --secondary-color: #6c757d;
+  --secondary-color-hover: #404244;
 
   --header-height: 70px;
 
@@ -130,8 +132,18 @@ body {
   min-height: 100vh;
 }
 
-.btn-primary {
+.btn-primary-custom {
   background-color: var(--primary-color) !important;
+  border: none;
+  min-width: 200px;
+  height: 50px;
+  border-radius: 25px;
+  font-weight: 500;
+  margin: 5px 10px 5px 10px;
+}
+
+.btn-secondary-custom {
+  background-color: var(--secondary-color) !important;
   border: none;
   min-width: 200px;
   height: 50px;
@@ -142,6 +154,10 @@ body {
 
 .btn-primary:hover {
   background-color: var(--primary-color-hover) !important;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-color-hover) !important;
 }
 
 .navbar {
@@ -163,7 +179,7 @@ body {
   border: 2px solid var(--color-border);
 }
 
-.form-control {
+.form-control-custom {
   background-color: var(--color-background-soft);
   border: 2px solid var(--color-border);
   min-width: 300px;
@@ -172,13 +188,13 @@ body {
   color: var(--color-text);
 }
 
-.form-control:focus {
+.form-control-custom:focus {
   background-color: var(--color-background-mute);
   border: 2px solid var(--color-border) !important;
   color: var(--color-text);
 }
 
-.form-control:active {
+.form-control-custom:active {
   background-color: var(--color-background-mute);
   border: 2px solid var(--color-border)  !important;
   color: var(--color-text);
@@ -186,4 +202,5 @@ body {
 
 .page {
   height: calc(100vh - 50px);
+  padding: 20px;
 }
