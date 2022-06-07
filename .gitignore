@@ -1,1 +1,4 @@
 venv
+quiz-api/Model/__pycache__
+quiz-api/Service/__pycache__
+quiz-api/Utils/__pycache__

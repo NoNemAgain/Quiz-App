@@ -1,8 +1,6 @@
 <template>
   <div class="page">
 
-    <AlertPopup v-show="errorMsg" :errorMsg="errorMsg" />
-
     <div class="container-fluid home-page-container">
       <div class="row home-page-row">
         <div class="col-sm-12 col-md-7 col-lg-8 welcome-box">
@@ -33,16 +31,15 @@
 <script>
 import quizApiService from "@/services/quizApiService";
 import LeaderboardDisplay from "@/components/LeaderboardDisplay.vue";
-import AlertPopup from "@/components/AlertPopup.vue";
 import LeaderboardModal from "@/components/LeaderboardModal.vue";
 import generalStorageService from "@/services/GeneralStorageService";
 
 export default {
   name: "HomePage",
+  emits: ['show-alert'],
   data() {
     return {
-      registeredScores: [],
-      errorMsg: ''
+      registeredScores: []
     };
   },
   async created() {
@@ -51,13 +48,12 @@ export default {
       this.registeredScores = quizInfo.data.scores;
       generalStorageService.saveNumberOfQuestion(quizInfo.data.size);
     } else {
-      this.errorMsg = "Une erreur est survenue lors de la communication avec le serveur";
+      this.$emit('show-alert', "Une erreur est survenue lors de la communication avec le serveur");
     }
     
   },
   components: {
     LeaderboardDisplay,
-    AlertPopup,
     LeaderboardModal
   }
 };

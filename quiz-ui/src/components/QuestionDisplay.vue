@@ -51,18 +51,18 @@ export default {
 }
 
 .answer-btn {
-  background-color: var(--color-background-soft) !important;
-  border: 2px solid var(--color-border);
+  background-color: var(--primary-color) !important;
+  border: none;
   min-width: 200px;
   height: 80px;
   width: 100%;
   font-weight: 500;
-  color: var(--color-text);
+  color: white;
   margin: 5px 0px 5px 0px;
 }
 
 .answer-btn:hover, .answer-btn:focus, .answer-btn:active {
-  background-color: var(--primary-color) !important;
+  background-color: var(--primary-color-hover) !important;
   border: none;
   color: white;
 }
@@ -114,14 +114,12 @@ export default {
 
   .answer-btn {
     height: 50px;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .question-text {
     font-size: 16px;
   }
 }
-
-
 
 </style>

@@ -1,7 +1,3 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <header>
     <div class="wrapper">
@@ -17,9 +13,34 @@ import { RouterLink, RouterView } from 'vue-router'
       </nav>
     </div>
   </header>
+  <AlertPopup v-show="errorMsg" :errorMsg="errorMsg" @close-alert="closeAlertPopup" />
 
-  <RouterView />
+  <RouterView @show-alert="showAlertPopup"/>
 </template>
+
+<script>
+import AlertPopup from "@/components/AlertPopup.vue";
+
+export default {
+  data() {
+    return {
+      errorMsg: ''
+    };
+  },
+  components: {
+    AlertPopup
+  },
+  methods: {
+    async showAlertPopup(message) {
+      this.errorMsg = message;
+    },
+    async closeAlertPopup() {
+      this.errorMsg = '';
+    }
+  }
+};
+</script>
+
 
 <style>
 @import '@/assets/base.css';

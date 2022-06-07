@@ -6,6 +6,7 @@ import ScorePage from '../views/ScorePage.vue'
 import Admin from '../views/Admin.vue'
 import QuestionAdminDisplay from '../views/QuestionAdminDisplay.vue'
 import QuestionEdition from '../views/QuestionEdition.vue'
+import NotFoundPage from '../views/NotFoundPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/questionEdition/:position?',
       name: 'QuestionEdition',
       component: QuestionEdition
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'NotFoundPage',
+      component: NotFoundPage
     }
   ]
 })

@@ -58,7 +58,7 @@ export default {
           this.showWrongPwdMsg = true;
         }
         else {
-          throw 'Server error';
+          // throw 'Server error';
         }
       }
     }

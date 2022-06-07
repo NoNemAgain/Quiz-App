@@ -1,6 +1,5 @@
 <template>
   <div class="oldscores-table">
-    <AlertPopup v-show="errorMsg" :errorMsg="errorMsg" />
     <table class="table">
       <thead>
         <tr>
@@ -30,14 +29,13 @@
 <script>
 import quizApiService from "@/services/quizApiService";
 import generalStorageService from "@/services/GeneralStorageService";
-import AlertPopup from "@/components/AlertPopup.vue";
 
 export default {
   name: "QuestionsList",
+  emits: ['show-alert'],
   data() {
     return {
-      questions: [],
-      errorMsg: ''
+      questions: []
     };
   },
   async created() {
@@ -48,13 +46,10 @@ export default {
     if(res.status === 200) {
       this.questions = res.data.questions;
     } else {
-      this.errorMsg = "Une erreur est survenue lors de la communication avec le serveur";
+      this.$emit('show-alert', "Une erreur est survenue lors de la communication avec le serveur");
     }
     // add save the number of questions
     generalStorageService.saveNumberOfQuestion(this.questions.length)
-  },
-  components: {
-    AlertPopup
   },
   methods: {
     displayQestion(index) {
