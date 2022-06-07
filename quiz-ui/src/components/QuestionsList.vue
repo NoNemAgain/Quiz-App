@@ -1,5 +1,6 @@
 <template>
   <div class="oldscores-table">
+    <button class="btn btn-primary" @click="this.$router.push('/questionEdition')">Crée une nouvelle question</button>
     <table class="table">
       <thead>
         <tr>
@@ -22,7 +23,6 @@
         </tr>
       </tbody>
     </table>
-    <button class="btn btn-primary btn-custom" @click="this.$router.push('/questionEdition')">Crée une nouvelle question</button>
   </div>
 </template>
 

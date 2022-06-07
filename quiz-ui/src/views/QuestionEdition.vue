@@ -19,6 +19,7 @@
         <div class="form-group">
           <label for="questionText">Image</label>
           <ImageUpload @file-change="imageFileChangedHandler" />
+          <img v-if="question.image" :src="question.image">
         </div>
         <div class="form-group">
           <label for="questionText">Les réponses</label>
@@ -117,6 +118,8 @@ export default {
       } else {
         quizApiService.addQuestion(this.question, this.token);
       }
+
+      this.$router.push('/admin');
     }
   }
 };

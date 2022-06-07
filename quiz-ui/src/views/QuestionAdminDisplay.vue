@@ -1,11 +1,12 @@
 <template>
   <div>
-    <button class="btn btn-primary btn-custom" @click="modifierQestion()">Modifier</button>
-    <button class="btn btn-primary btn-custom" @click="deleteQuestion()">Supprimer</button>
+    <button class="btn btn-primary" @click="modifierQestion()">Modifier</button>
+    <button class="btn btn-danger" @click="deleteQuestion()">Supprimer</button>
     <QuestionDisplay 
       :question="currentQuestion" 
       :currentQuestionPosition="position" 
       :totalNumberOfQuestion="totalNumberOfQuestion"
+      :adminMode="true"
       @answer-selected="answerClickedHandler"/>
   </div>
 </template>

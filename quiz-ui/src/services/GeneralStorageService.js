@@ -13,5 +13,8 @@ export default {
     },
     getToken() {
         return window.localStorage.getItem("token");
+    },
+    removeToken() {
+        return window.localStorage.removeItem("token");
     }
   };

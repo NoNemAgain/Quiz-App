@@ -10,7 +10,7 @@
         <div v-if="question" class="container-fluid">
           <div class="row row-cols-2">
             <div class="col-12 col-sm-12 col-md-6" v-for="(answer, index) in question.possibleAnswers" :key="answer.text" >
-              <button  class="btn btn-outline-primary answer-btn" @click="$emit('answer-selected', index+1)">{{ answer.text }}</button>
+              <button class="btn btn-primary answer-btn" @click="$emit('answer-selected', index+1)" :class="{ 'btn-success': adminMode && answer.isCorrect }">{{ answer.text }}</button>
             </div>
           </div>
         </div>
@@ -38,6 +38,9 @@ export default {
     },
     question: {
       type: Object
+    },
+    adminMode: {
+      type: Boolean
     }
   }
 };
@@ -51,7 +54,6 @@ export default {
 }
 
 .answer-btn {
-  background-color: var(--primary-color) !important;
   border: none;
   min-width: 200px;
   height: 80px;
@@ -62,9 +64,16 @@ export default {
 }
 
 .answer-btn:hover, .answer-btn:focus, .answer-btn:active {
-  background-color: var(--primary-color-hover) !important;
   border: none;
   color: white;
+}
+
+/* Apply this color only if it is not the right answer in admin mode */
+.answer-btn:not(.btn-success) {
+  background-color: var(--primary-color) !important;
+}
+.answer-btn:hover:not(.btn-success), .answer-btn:focus:not(.btn-success), .answer-btn:active:not(.btn-success) {
+  background-color: var(--primary-color-hover) !important;
 }
 
 .answer-row {

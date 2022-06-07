@@ -8,8 +8,8 @@
           </div>
           <div class="login-box-body">
             <label for="password">Mot de passe</label>
-            <input type="password" class="form-control form-control-custom password-input" id="password" v-model="password" required>
-            <p v-if="showWrongPwdMsg">Mauvais mot de passe</p>
+            <input type="password" class="form-control form-control-custom password-input" id="password" v-model="password" placeholder="Mot de passe">
+            <p class="input-error-msg" v-if="errorMsg !== ''">{{ errorMsg }}</p>
           </div>
           <div class="login-box-footer">
             <button class="btn btn-primary btn-custom" @click="launchLogin">Connexion</button>
@@ -30,13 +30,15 @@ import QuestionsList from "@/components/QuestionsList.vue";
 
 export default {
   name: "AdminLoginPage",
+  emits: ['show-alert', 'set-logout-btn'],
   data() {
     return {
       password: '',
+      adminMode: '',
+      errorMsg: ''
     };
   },
   async created() {
-    this.showWrongPwdMsg = false;
     this.adminMode = generalStorageService.getToken();
   },
   components: {
@@ -51,15 +53,18 @@ export default {
         if(res.status === 200) {
           // Save token
           generalStorageService.saveToken(res.data.token);
-          window.location.reload();
+          this.adminMode = res.data.token;
+          this.$emit('set-logout-btn', this.adminMode);
         }
         // Wrong password
         else if(res.status === 401) {
-          this.showWrongPwdMsg = true;
+          this.errorMsg = "Mauvais mot de passe";
         }
         else {
-          // throw 'Server error';
+          this.$emit('show-alert', "Une erreur est survenue lors de la communication avec le serveur");
         }
+      } else {
+        this.errorMsg = "Veuillez entrer votre mot de passe"
       }
     }
   }

@@ -41,6 +41,7 @@ import OldScoresDisplay from "@/components/OldScoresDisplay.vue";
 
 export default {
   name: "ScorePage",
+  emits: ['show-alert'],
   data() {
     return {
       registeredScores: [],
@@ -55,7 +56,7 @@ export default {
     if(quizInfo.status === 200) {
       this.registeredScores = quizInfo.data.scores;
     } else {
-      // gérer erreur
+      this.$emit('show-alert', "Une erreur est survenue lors de la communication avec le serveur");
     }
   },
   components: {

@@ -24,6 +24,8 @@
   --secondary-color: #6c757d;
   --secondary-color-hover: #404244;
 
+  --red-color: #dc3545;
+
   --header-height: 70px;
 
   /* --primary-color: #004461;
@@ -185,3 +187,7 @@ body {
   height: calc(100vh - 50px);
   padding: 20px;
 }
+
+.input-error-msg{
+  color: #dc3545;
+} 
