@@ -3,7 +3,7 @@
     <div class="card question-edition-card">
       <h2 v-if="position">Mettre à jour une question</h2>
       <h2 v-else>Créer une question</h2>
-      <form action="#" onsubmit="return false">
+      <form :onsubmit="saveQuestion">
         <div class="form-group">
           <label for="questionPosition">Position</label>
           <input type="number" class="form-control" id="questionPosition" min="1" :max="totalNumberOfQuestion + 1" placeholder="Position" v-model="question.position" required>
@@ -33,13 +33,13 @@
             <tbody>
               <tr v-for="(possibleAnswer, index) in question.possibleAnswers" :key="index">
                 <td><input class="form-check-input" type="radio" name="questionIsCorrect" :value="index" v-model="checkedIndex" required></td>
-                <td><input type="text" class="form-control" placeholder="Text" v-model="possibleAnswer.text" required></td>
+                <td><input type="text" class="form-control" placeholder="Réponse" v-model="possibleAnswer.text" required></td>
               </tr>
             </tbody>
           </table>
         </div>
         <button class="btn btn-secondary btn-custom" @click="this.$router.push('/admin')" disableValidation="true">Annuler</button>
-        <button class="btn btn-primary btn-custom" @click="saveQuestion">Sauvegarder</button>
+        <button type="submit" class="btn btn-primary btn-custom">Sauvegarder</button>
       </form>
     </div>
   </div>
